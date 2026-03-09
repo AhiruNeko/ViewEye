@@ -1,5 +1,5 @@
 <template>
-    <div class="bg" style="--bg-src: url('src/assets/loginBg.png')">
+    <div class="bg" :style="{ backgroundImage: `url(${bgUrl})` }">
         <div class="min-h-dvh flex items-center justify-center p-[4vw]">
             <div class="bg-white rounded-[1em] shadow-lg w-[90%] max-w-[24em] p-[1.5em] flex flex-col items-center">
                 <!-- Logo -->
@@ -43,6 +43,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import bgUrl from '@/assets/loginBg.png';
 
 const props = withDefaults(defineProps<{
     title?: string
