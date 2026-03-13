@@ -46,8 +46,12 @@ import { ref } from 'vue'
 import { login, getCurrentUser } from '@/utils/db'
 import bgUrl from '@/assets/loginBg.png'
 
-const userData = await getCurrentUser();
-if (userData) window.location = '/';
+onMounted(async () => {
+    const userData = await getCurrentUser();
+    if (userData) {
+        router.push('/')
+    }
+})
 
 const props = defineProps({
     title: {
