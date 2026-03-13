@@ -46,6 +46,7 @@ import { ref, onMounted } from 'vue'
 import { login, getCurrentUser } from '@/utils/db'
 import { useRouter } from 'vue-router'
 import bgUrl from '@/assets/loginBg.png'
+import { supabase } from '@/lib/supabase.js'
 
 const router = useRouter();
 
