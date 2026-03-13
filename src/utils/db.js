@@ -30,7 +30,7 @@ export const login = async () => {
     const { d, e } = await supabase
         .from('users')
         .select('*')
-        .eq('uid', userData.uid);
+        .eq('uid', userData.id);
     if (!d) {
         await supabase
             .from('users')
