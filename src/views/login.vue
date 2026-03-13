@@ -41,37 +41,51 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
-import bgUrl from '@/assets/loginBg.png';
+import { login, getCurrentUser } from '@/utils/db'
+import bgUrl from '@/assets/loginBg.png'
 
-const props = withDefaults(defineProps<{
-    title?: string
-    subtitle?: string
-    buttonText?: string
-    footerText?: string
-    autoLoading?: boolean
-}>(), {
-    title: '欢迎回来',
-    subtitle: '使用您的 Google 账户安全登录',
-    buttonText: '使用 Google 登录',
-    footerText: '点击登录即表示您同意我们的服务条款和隐私政策',
-    autoLoading: true
+const userData = await getCurrentUser();
+if (userData) window.location = '/';
+
+const props = defineProps({
+    title: {
+        type: String,
+        default: '欢迎回来'
+    },
+    subtitle: {
+        type: String,
+        default: '使用您的 Google 账户安全登录'
+    },
+    buttonText: {
+        type: String,
+        default: '使用 Google 登录'
+    },
+    footerText: {
+        type: String,
+        default: '点击登录即表示您同意我们的服务条款和隐私政策'
+    },
+    autoLoading: {
+        type: Boolean,
+        default: true
+    }
 })
 
-const emit = defineEmits<{
-    login: []
-}>()
+const emit = defineEmits(['login'])
 
 const loading = ref(false)
 
 const handleLogin = () => {
-    if (loading.value) return
-    if (props.autoLoading) loading.value = true
-    emit('login')
+    if (loading.value) return;
+    if (props.autoLoading) {
+        loading.value = true
+    }
+    login();
+    emit('login');
 }
 
-const setLoading = (v: boolean) => { loading.value = v }
+const setLoading = (v) => { loading.value = v }
 const reset = () => { loading.value = false }
 
 defineExpose({ loading, setLoading, reset })
