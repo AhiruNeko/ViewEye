@@ -42,9 +42,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { login, getCurrentUser } from '@/utils/db'
+import { useRouter } from 'vue-router'
 import bgUrl from '@/assets/loginBg.png'
+
+const router = useRouter();
 
 onMounted(async () => {
     const userData = await getCurrentUser();
