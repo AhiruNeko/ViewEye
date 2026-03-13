@@ -20,6 +20,9 @@ export const getCurrentUser = async () => {
 export const login = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
+        options: {
+            redirectTo: `${window.location.origin}/`
+        }
     })
 
     if (error) {
