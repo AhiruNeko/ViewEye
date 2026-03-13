@@ -24,18 +24,5 @@ export const login = async () => {
 
     if (error) {
         console.error('Google error:', error.message);
-        return;
-    }
-    const userData = await getCurrentUser();
-    const { d, e } = await supabase
-        .from('users')
-        .select('*')
-        .eq('uid', userData.id);
-    if (!d) {
-        await supabase
-            .from('users')
-            .insert([{
-                uid: userData.id
-            }]);
     }
 }

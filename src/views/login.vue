@@ -89,6 +89,20 @@ const handleLogin = () => {
         loading.value = true
     }
     login();
+    onMounted(async () => {
+        const userData = await getCurrentUser();
+        const {d, e} = await supabase
+            .from('users')
+            .select('*')
+            .eq('uid', userData.id);
+        if (!d) {
+            await supabase
+                .from('users')
+                .insert([{
+                    uid: userData.id
+                }]);
+        }
+    });
     emit('login');
 }
 
