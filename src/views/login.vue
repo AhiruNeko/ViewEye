@@ -83,12 +83,12 @@ const emit = defineEmits(['login'])
 
 const loading = ref(false)
 
-const handleLogin = () => {
+const handleLogin = async () => {
     if (loading.value) return;
     if (props.autoLoading) {
         loading.value = true
     }
-    login();
+    await login();
     onMounted(async () => {
         const userData = await getCurrentUser();
         const {d, e} = await supabase
