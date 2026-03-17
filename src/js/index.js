@@ -1,8 +1,17 @@
-import { getCurrentUser, supabase } from './supabase.js';
+import { supabase, isLogined } from './supabase.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const navBtn = document.getElementById('navBtn');
     let isProcessing = false;
+
+    const logined = await isLogined();
+    if (logined) {
+        navBtn.textContent = '我的賬戶';
+        navBtn.href = 'account.html';
+    } else {
+        navBtn.textContent = '登入';
+        navBtn.href = 'login.html';
+    }
 
     supabase.auth.onAuthStateChange(async (event, session) => {
         console.log('Event:', event);
@@ -10,10 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (user) {
             console.log('User loaded:', user);
-            if (navBtn) {
-                navBtn.textContent = '我的賬戶';
-                navBtn.href = 'account.html';
-            }
 
             const cleanUrl = window.location.origin + window.location.pathname + window.location.search;
             window.history.replaceState(null, document.title, cleanUrl);
@@ -40,11 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 isProcessing = false;
             }
 
-        } else {
-            if (navBtn) {
-                navBtn.textContent = '登入';
-                navBtn.href = 'login.html';
-            }
         }
     });
 

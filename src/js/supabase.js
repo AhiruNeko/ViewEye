@@ -39,3 +39,18 @@ export async function getCurrentUser() {
     }
     return data;
 }
+
+export async function isLogined() {
+    try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+            console.error('Check login status failed:', error.message);
+            return false;
+        }
+        return !!(session && session.user);
+    } catch (err) {
+        console.error('Unexpected error in isLogined:', err);
+        return false;
+    }
+}

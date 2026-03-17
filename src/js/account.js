@@ -1,6 +1,10 @@
-import { getCurrentUser, signOut } from './supabase.js';
+import { getCurrentUser, signOut, isLogined } from './supabase.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const logined = await isLogined();
+    if (!logined) {
+        window.location.href = 'login.html';
+    }
     const userAvatar = document.getElementById('userAvatar');
     const userName = document.getElementById('userName');
     const userEmail = document.getElementById('userEmail');
@@ -12,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { user } = await getCurrentUser();
 
         if (user) {
-            // 加载用户信息
             const profile = user.user_metadata;
             
             if (profile.avatar_url) {
