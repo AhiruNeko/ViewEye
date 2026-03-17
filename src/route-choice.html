@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>綫路選擇 - ViewEye</title>
+    <link rel="stylesheet" href="css/route-choice.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">ViewEye</a>
+            <div class="nav-actions">
+                <a href="login.html" class="login-btn" id="navBtn">登录</a>
+            </div>
+        </div>
+    </nav>
+    <div class="choice-container">
+        <div class="choice-card">
+            <h1 class="title">選擇您的綫路</h1>
+            
+            <!-- 香港选项组 -->
+            <div class="dropdown-group">
+                <button class="dropdown-trigger" onclick="this.parentElement.classList.toggle('active')">
+                    <span>香港 - 西貢</span>
+                    <svg class="arrow-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" class="choice-item">均衡綫路</a>
+                    <a href="#" class="choice-item">休閑綫路</a>
+                    <a href="#" class="choice-item">硬核綫路</a>
+                </div>
+            </div>
+
+            <!-- 珠海选项组 -->
+            <div class="dropdown-group">
+                <button class="dropdown-trigger" onclick="this.parentElement.classList.toggle('active')">
+                    <span>珠海</span>
+                    <svg class="arrow-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" class="choice-item">敬請期待</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script src="./js/route-choice.js" type="module"></script>
+</html>

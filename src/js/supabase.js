@@ -1,0 +1,41 @@
+//supabase 初始化
+import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+const supabaseUrl = 'https://xyzovwbnldmjjrjbowxx.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5em92d2JubGRtampyamJvd3h4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3OTEyOTIsImV4cCI6MjA4ODM2NzI5Mn0.5xcRkBlrJwJP0jQN1KGt3yz_5adCVCfoGTtEvr7H2qw';
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// supabase 谷歌登录
+export async function signInWithGoogle() {
+    const directUrl = window.location.href.replace('login.html', 'index.html');
+    console.log("directUrl: ", directUrl);
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: directUrl,
+        },
+    });
+    if (error) {
+        console.error('Google error:', error.message);
+        return;
+    }
+    return data;
+}
+
+// supabase 登出
+export async function signOut() {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        console.error('Sign out error:', error.message);
+    }
+}
+
+//supabase 获取当前用户
+export async function getCurrentUser() {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+        console.error('Get user error:', error.message);
+    }
+    return data;
+}

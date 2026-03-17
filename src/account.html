@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的賬戶 - ViewEye</title>
+    <link rel="stylesheet" href="./css/account.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">ViewEye</a>
+            <div class="nav-actions">
+                <button id="signOutBtn" class="signout-btn">登出</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="account-wrapper">
+        <div class="account-card">
+            <div class="profile-header">
+                <div class="avatar-container">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="User Avatar">
+                </div>
+                <h1 id="userName">加載中...</h1>
+                <p id="userEmail">請稍後</p>
+            </div>
+
+            <div class="account-details">
+                <div class="detail-item">
+                    <span class="label">上次登錄</span>
+                    <span id="lastSignIn" class="value">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">加入時間</span>
+                    <span id="createdAt" class="value">-</span>
+                </div>
+            </div>
+
+            <div class="account-actions">
+                <a href="route-choice.html" class="primary-btn">開始新的旅程</a>
+                <a href="https://myaccount.google.com/" target="_blank" class="secondary-btn">更多設置</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/account.js" type="module"></script>
+</body>
+</html>
