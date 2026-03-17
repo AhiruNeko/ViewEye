@@ -15,9 +15,10 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: var(--text-light);
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* 防止 body 出现滚动条 */
     background: url('../assets/indexBgRow.png') no-repeat center center fixed;
     background-size: cover;
     transition: background-image 0.3s ease-in-out;
@@ -37,7 +38,7 @@ body {
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-color);
-    position: sticky;
+    position: fixed; /* 固定在顶部 */
     top: 0;
     z-index: 1000;
 }
@@ -75,26 +76,69 @@ body {
     background-color: var(--primary-hover);
 }
 
+.hero-container {
+    flex-grow: 1;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    height: 100vh;
+    padding-top: 64px; /* 留出 navbar 的位置 */
+    scrollbar-width: none; /* 隐藏滚动条 (Firefox) */
+    -ms-overflow-style: none; /* 隐藏滚动条 (IE/Edge) */
+}
+
+.hero-container::-webkit-scrollbar {
+    display: none; /* 隐藏滚动条 (Chrome/Safari) */
+}
+
 /* Hero Section */
 .hero-section {
-    flex-grow: 1;
+    height: calc(100vh - 64px);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
     padding: 2rem;
+    position: relative;
+    /* 核心修改：确保每个屏都是独立视窗，内容浮动进入 */
+    overflow: hidden; 
 }
 
 .hero-content {
-    animation: floatIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     opacity: 0;
+    transform: translateY(30px);
+    /* 为浮入浮出提供平滑过渡 */
+    transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: opacity, transform;
+}
+
+/* 保持页面加载时第一屏大标题的原有动画逻辑 */
+.hero-section:first-child .hero-content {
+    animation: floatIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* 当 section 进入 50% 视口时，由 JS 添加 is-visible 类 */
+.hero-section.is-visible .hero-content {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .main-title {
     font-size: 4rem;
     font-weight: 900;
     color: white;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.05em;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
     margin-bottom: 0.5rem;
     letter-spacing: -0.05em;
 }
@@ -103,9 +147,52 @@ body {
     font-size: 1.25rem;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.85);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    animation: floatIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    /* 副标题稍微延迟一点浮现，更有层次感 */
+    transition-delay: 0.5s; 
+    font-weight: bold;
+}
+
+.text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    /* 副标题稍微延迟一点浮现，更有层次感 */
+    transition-delay: 0.15s; 
+    line-height: 1.8;
+    max-width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    color: rgba(255, 255, 255, 1);
+    animation: blinkScroll 2s infinite;
+    justify-content: center; /* 水平居中 */
+    align-items: center;
+    /* 滚动后指示器可选择性淡出 */
+    transition: opacity 0.5s ease;
+    margin-top: 12rem;
+    display: inline-block;
+}
+
+/* 只有第一屏显示提示箭头 */
+.hero-section:not(:first-child) .scroll-indicator {
     opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes blinkScroll {
+    0%, 100% {
+        opacity: 0.2;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateY(10px);
+    }
 }
 
 /* Animation */
@@ -123,9 +210,14 @@ body {
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .navbar { height: 56px; }
+    .hero-container { padding-top: 56px; }
+    .hero-section { height: calc(100vh - 56px); }
     .nav-container { padding: 0 1rem; }
     .nav-logo { font-size: 1.25rem; }
     .login-btn { padding: 0.4rem 1rem; font-size: 0.8125rem; }
     .main-title { font-size: 3rem; }
     .subtitle { font-size: 1rem; }
+    .title { font-size: 1.5rem; }
+    .text { font-size: 0.75rem; max-width: 90%; }
+    .scroll-indicator { margin-top: 8rem; }
 }

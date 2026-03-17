@@ -1,45 +1,70 @@
 import { getCurrentUser, supabase } from './supabase.js';
 
-supabase.auth.onAuthStateChange(async (event, session) => {
-    if (session) {
-        const cleanUrl = window.location.origin + window.location.pathname + window.location.search;
-        window.history.replaceState(null, document.title, cleanUrl);
-    }
-    if (session?.user) {
-        const uid = session.user.id;
-        const { data, error } = await supabase
-            .from('users')
-            .upsert(
-                { 
-                    uid: uid, 
-                }, 
-                { onConflict: 'uid' } 
-            )
-            .select();
-
-        if (error) {
-            console.error("Insert error:", error.message);
-        } else {
-            console.log("User info upserted successfully:", data);
-        }
-    }
-});
-
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     const navBtn = document.getElementById('navBtn');
+    let isProcessing = false;
 
-    try {
-        const { user } = await getCurrentUser();
+    supabase.auth.onAuthStateChange(async (event, session) => {
+        console.log('Event:', event);
+        const user = session?.user;
+
         if (user) {
-            navBtn.textContent = '賬戶';
-            navBtn.href = 'account.html';
+            console.log('User loaded:', user);
+            if (navBtn) {
+                navBtn.textContent = '我的賬戶';
+                navBtn.href = 'account.html';
+            }
+
+            const cleanUrl = window.location.origin + window.location.pathname + window.location.search;
+            window.history.replaceState(null, document.title, cleanUrl);
+
+            if ((event === 'INITIAL_SESSION' || event === 'SIGNED_IN') && !isProcessing) {
+                isProcessing = true;
+                const uid = user.id;
+
+                const { data, error } = await supabase
+                    .from('users')
+                    .upsert(
+                        { 
+                            uid: uid, 
+                        }, 
+                        { onConflict: 'uid' } 
+                    )
+                    .select();
+
+                if (error) {
+                    console.error("Loading error:", error.message);
+                } else {
+                    console.log("Loaded:", data);
+                }
+                isProcessing = false;
+            }
+
         } else {
-            navBtn.textContent = '登錄';
-            navBtn.href = 'login.html';
+            if (navBtn) {
+                navBtn.textContent = '登入';
+                navBtn.href = 'login.html';
+            }
         }
-    } catch (error) {
-        console.error('User loaded error:', error);
-        navBtn.textContent = '登錄';
-        navBtn.href = 'login.html';
-    }
+    });
+
+    // --- 新增内容浮入浮出逻辑 ---
+    const observerOptions = {
+        root: document.querySelector('.hero-container'),
+        threshold: 0.5 // 当 50% 的内容可见时触发
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+            } else {
+                entry.target.classList.remove('is-visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.hero-section').forEach(section => {
+        observer.observe(section);
+    });
 });

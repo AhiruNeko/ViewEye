@@ -52,6 +52,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 登出逻辑
     signOutBtn.addEventListener('click', async () => {
         await signOut();
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
     });
 });
