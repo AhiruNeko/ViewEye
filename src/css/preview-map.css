@@ -61,8 +61,10 @@ body, html {
     transition: background-color 0.2s ease;
 }
 
-.login-btn:hover {
-    background-color: var(--primary-hover);
+@media (hover: hover) {
+    .login-btn:hover {
+        background-color: var(--primary-hover);
+    }
 }
 
 /* Map Style */
@@ -140,8 +142,10 @@ body, html {
     transition: background 0.2s;
 }
 
-.category-header:hover {
-    background: #f1f5f9;
+@media (hover: hover) {
+    .category-header:hover {
+        background: #f1f5f9;
+    }
 }
 
 .category-header::after {
@@ -177,9 +181,11 @@ body, html {
     transition: all 0.2s;
 }
 
-.item-header:hover {
-    background: #f0fdf4;
-    color: var(--primary-color);
+@media (hover: hover) {
+    .item-header:hover {
+        background: #f0fdf4;
+        color: var(--primary-color);
+    }
 }
 
 .item-detail {
@@ -213,8 +219,10 @@ body, html {
     font-weight: 600;
 }
 
-.item-detail a:hover {
-    text-decoration: underline;
+@media (hover: hover) {
+    .item-detail a:hover {
+        text-decoration: underline;
+    }
 }
 
 /* Map Controls */
@@ -250,9 +258,11 @@ body, html {
     transition: all 0.2s ease;
 }
 
-.map-controls button:hover {
-    background: #f8fafc;
-    color: var(--primary-color);
+@media (hover: hover) {
+    .map-controls button:hover {
+        background: #f8fafc;
+        color: var(--primary-color);
+    }
 }
 
 .map-controls button:active {
@@ -328,9 +338,11 @@ body, html {
         transition: all 0.3s ease;
     }
 
-    #desktop-fab:hover {
-        background: var(--primary-hover);
-        transform: scale(1.05);
+    @media (hover: hover) {
+        #desktop-fab:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
     }
 
     /* 当卡片展开时，隐藏悬浮按钮 */
@@ -359,8 +371,10 @@ body, html {
         text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
     }
 
-    #toggle-card:hover {
-        color: red;
+    @media (hover: hover) {
+        #toggle-card:hover {
+            color: red;
+        }
     }
 }
 
@@ -429,20 +443,5 @@ body, html {
 
     .nav-logo {
         font-size: 1.25rem;
-    }
-}
-
-@media (pointer: coarse) {
-    /* pointer: coarse 指的是手指这种粗略的定位设备（即手机/平板） */
-    * {
-        /* 取消所有元素的 hover 动画和过渡 */
-        transition: none !important;
-    }
-    
-    /* 强制恢复原始背景色/文字颜色，防止点击后“粘住”颜色 */
-    .button:hover, 
-    a:hover {
-        background-color: inherit !important;
-        color: inherit !important;
     }
 }

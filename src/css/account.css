@@ -75,9 +75,11 @@ body {
     transition: all 0.2s ease;
 }
 
-.signout-btn:hover {
-    background-color: #ef4444;
-    color: white;
+@media (hover: hover) {
+    .signout-btn:hover {
+        background-color: #ef4444;
+        color: white;
+    }
 }
 
 /* Account Content */
@@ -176,10 +178,12 @@ body {
     transition: all 0.2s ease;
 }
 
-.primary-btn:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+@media (hover: hover) {
+    .primary-btn:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+    }
 }
 
 .secondary-btn {
@@ -195,9 +199,11 @@ body {
     transition: all 0.2s ease;
 }
 
-.secondary-btn:hover {
-    background-color: #f8fafc;
-    border-color: #cbd5e1;
+@media (hover: hover) {
+    .secondary-btn:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+    }
 }
 
 /* Responsive Adjustments */
@@ -222,5 +228,7 @@ body {
     .navbar { background: rgba(30, 41, 59, 0.8); }
     .account-details { background-color: #0f172a; }
     .profile-header h1 { color: #f1f5f9; }
-    .secondary-btn:hover { background-color: #334155; border-color: #475569; }
+    @media (hover: hover) {
+        .secondary-btn:hover { background-color: #334155; border-color: #475569; }
+    }
 }

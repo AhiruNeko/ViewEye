@@ -136,11 +136,13 @@ body {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.google-btn:hover {
-    background-color: #f9fafb;
-    border-color: #cbd5e1;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+@media (hover: hover) {
+    .google-btn:hover {
+        background-color: #f9fafb;
+        border-color: #cbd5e1;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .google-btn:active {
@@ -195,8 +197,10 @@ body {
 
 /* Tablet and Desktop (Hover effects only for mouse users) */
 @media (min-width: 768px) {
-    .login-card:hover {
-        transform: translateY(-4px);
+    @media (hover: hover) {
+        .login-card:hover {
+            transform: translateY(-4px);
+        }
     }
 }
 
@@ -219,8 +223,10 @@ body {
         color: #f1f5f9;
     }
 
-    .google-btn:hover {
-        background-color: #334155;
+    @media (hover: hover) {
+        .google-btn:hover {
+            background-color: #334155;
+        }
     }
 
     .login-header h1 {

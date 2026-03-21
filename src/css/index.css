@@ -72,8 +72,10 @@ body {
     transition: background-color 0.2s ease;
 }
 
-.login-btn:hover {
-    background-color: var(--primary-hover);
+@media (hover: hover) {
+    .login-btn:hover {
+        background-color: var(--primary-hover);
+    }
 }
 
 .hero-container {
@@ -259,11 +261,13 @@ body {
     font-size: 1.1rem;
 }
 
-.btn:hover {
-    background-color: #f8fafc;
-    border-color: #cbd5e1;
-    color: var(--text-dark);
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0);
+@media (hover: hover) {
+    .btn:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+        color: var(--text-dark);
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0);
+    }
 }
 
 @media (max-width: 768px) {
