@@ -1,7 +1,8 @@
-import { supabase, isLogined } from './supabase.js';
+import { supabase, isLogined, recordPreviousPage } from './supabase.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const startTourBtn = document.getElementById('start-tour-btn');
+    const exploreBtn = document.getElementById('explore-btn');
     const navBtn = document.getElementById('navBtn');
     let isProcessing = false;
 
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         navBtn.textContent = '登入';
         navBtn.href = 'login.html';
+        recordPreviousPage('index.html');
     }
 
     supabase.auth.onAuthStateChange(async (event, session) => {
@@ -72,9 +74,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     startTourBtn.addEventListener('click', async () => {
         const logined = await isLogined();
         if (logined) {
+            recordPreviousPage('route-choice.html');
             window.location.href = 'route-choice.html';
         } else {
             window.location.href = 'login.html';
+            recordPreviousPage('index.html');
         }
+    });
+
+    exploreBtn.addEventListener('click', () => {
+        window.location.href = 'preview-map.html';
     });
 });

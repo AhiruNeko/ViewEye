@@ -1,4 +1,4 @@
-import { getCurrentUser, signOut, isLogined } from './supabase.js';
+import { getCurrentUser, signOut, isLogined, recordPreviousPage } from './supabase.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const logined = await isLogined();
@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } else {
             window.location.href = 'login.html';
+            recordPreviousPage('account.html');
         }
     } catch (error) {
         console.error('Loading error:', error);
@@ -55,6 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 登出逻辑
     signOutBtn.addEventListener('click', async () => {
         await signOut();
+        recordPreviousPage('account.html');
         window.location.href = 'login.html';
     });
 });

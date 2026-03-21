@@ -1,8 +1,9 @@
-import { getCurrentUser, isLogined } from './supabase.js';
+import { getCurrentUser, isLogined, recordPreviousPage } from './supabase.js';
 
 const logined = await isLogined();
 if (!logined) {
     window.location.href = 'login.html';
+    recordPreviousPage('route-choice.html');
 }
 
 const navBtn = document.getElementById("navBtn")

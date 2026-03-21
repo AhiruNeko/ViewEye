@@ -6,9 +6,19 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+export function recordPreviousPage(page) {
+    localStorage.setItem('previousPage', page);
+}
+
+function loadPreviousPage() {
+    const page = localStorage.getItem('previousPage') || 'index.html';
+    localStorage.removeItem('previousPage');
+    return page;
+}
+
 // supabase 谷歌登录
 export async function signInWithGoogle() {
-    const directUrl = window.location.href.replace('login.html', 'index.html');
+    const directUrl = window.location.href.replace('login.html', loadPreviousPage());
     console.log("directUrl: ", directUrl);
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
