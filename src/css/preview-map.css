@@ -383,7 +383,7 @@ body, html {
         border-radius: 1.5rem 1.5rem 0 0;
         transform: translateY(calc(100dvh - 80px)); /* Initial state: collapsed */
         padding-top: 0;
-        padding-bottom: 0;
+        padding-bottom: env(safe-area-inset-bottom);
     }
 
     #info-card.half-screen {
