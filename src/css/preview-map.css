@@ -431,3 +431,18 @@ body, html {
         font-size: 1.25rem;
     }
 }
+
+@media (pointer: coarse) {
+    /* pointer: coarse 指的是手指这种粗略的定位设备（即手机/平板） */
+    * {
+        /* 取消所有元素的 hover 动画和过渡 */
+        transition: none !important;
+    }
+    
+    /* 强制恢复原始背景色/文字颜色，防止点击后“粘住”颜色 */
+    .button:hover, 
+    a:hover {
+        background-color: inherit !important;
+        color: inherit !important;
+    }
+}
