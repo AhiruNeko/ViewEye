@@ -1,4 +1,9 @@
-import { getCurrentUser, supabase } from './supabase.js';
+import { getCurrentUser, isLogined } from './supabase.js';
+
+const logined = await isLogined();
+if (!logined) {
+    window.location.href = 'login.html';
+}
 
 const navBtn = document.getElementById("navBtn")
 const user = await getCurrentUser();

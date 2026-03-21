@@ -1,6 +1,7 @@
 import { supabase, isLogined } from './supabase.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const startTourBtn = document.getElementById('start-tour-btn');
     const navBtn = document.getElementById('navBtn');
     let isProcessing = false;
 
@@ -66,5 +67,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.querySelectorAll('.hero-section').forEach(section => {
         observer.observe(section);
+    });
+
+    startTourBtn.addEventListener('click', async () => {
+        const logined = await isLogined();
+        if (logined) {
+            window.location.href = 'route-choice.html';
+        } else {
+            window.location.href = 'login.html';
+        }
     });
 });
