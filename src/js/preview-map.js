@@ -10,7 +10,9 @@ import {
     STOP_LOCATIONS_HK,
     NORMAL_LOCATIONS_HK,
     DESCRIPTION_HK,
-    DETAILS_HK
+    DETAILS_HK,
+    ROUTES_HK,
+    ROUTES_ZH
 } from './mapUtils.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -32,6 +34,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.highlightLocation = highlightLocation;
     window.removeHighlight = removeHighlight;
     window.removeAllHighlight = removeAllHighlight;
+
+    // 路线控制器列表
+    let routingControls = [];
+
+    const clearRouting = () => {
+        routingControls.forEach(control => {
+            if (control.getPlan) {
+                map.removeControl(control);
+            } else if (map.hasLayer(control)) {
+                map.removeLayer(control);
+            }
+        });
+        routingControls = [];
+    };
+
+    const getCoords = (name) => {
+        return STOP_LOCATIONS_HK[name] || NORMAL_LOCATIONS_HK[name];
+    };
 
     // 2. 导航栏登录状态
     const navBtn = document.getElementById('navBtn');
@@ -181,13 +201,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 6. 地点分类逻辑
     const locationsContainer = document.getElementById('locations');
+    const routesContainer = document.getElementById('routes');
     const categories = ['香港', '珠海'];
     
-    // 初始化一级分类
+    // 初始化地点分类
     categories.forEach((name, index) => {
         const catDiv = document.createElement('div');
         catDiv.className = 'location-category';
-        catDiv.id = `cat-${index}`;
+        catDiv.id = `cat-loc-${index}`;
         catDiv.innerHTML = `
             <div class="category-header">${name}</div>
             <div class="category-content"></div>
@@ -198,19 +219,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         locationsContainer.appendChild(catDiv);
     });
 
+    // 初始化路线分类
+    categories.forEach((name, index) => {
+        const catDiv = document.createElement('div');
+        catDiv.className = 'location-category';
+        catDiv.id = `cat-route-${index}`;
+        catDiv.innerHTML = `
+            <div class="category-header">${name}</div>
+            <div class="category-content"></div>
+        `;
+        catDiv.querySelector('.category-header').addEventListener('click', () => {
+            catDiv.classList.toggle('expanded');
+        });
+        routesContainer.appendChild(catDiv);
+    });
+
     /**
      * 注册地点并添加到侧边栏及地图
      */
     window.registerLocation = registerLocation;
     function registerLocation(title, text, parent) {
-        const coords = STOP_LOCATIONS_HK[title] || NORMAL_LOCATIONS_HK[title];
+        const coords = getCoords(title);
         if (!coords) {
             console.warn(`Location not found: ${title}`);
             return;
         }
 
         const [lat, lng] = coords;
-        const catDiv = document.getElementById(`cat-${parent}`);
+        const catDiv = document.getElementById(`cat-loc-${parent}`);
         const contentDiv = catDiv.querySelector('.category-content');
 
         const itemDiv = document.createElement('div');
@@ -227,6 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 统一的激活逻辑：高亮、展开、滚动
         const activateLocation = (fromMap = false) => {
             removeAllHighlight();
+            clearRouting();
             highlightLocation(lat, lng);
             
             // 如果卡片是收起的，则打开它
@@ -278,8 +315,163 @@ document.addEventListener('DOMContentLoaded', async () => {
         contentDiv.appendChild(itemDiv);
     };
 
+    window.registerRoutes = registerRoutes;
+    function registerRoutes(routeName, parent) {
+        const routesData = parent === 0 ? ROUTES_HK : ROUTES_ZH;
+        const routeInfo = routesData[routeName];
+        if (!routeInfo) {
+            console.warn(`Route not found: ${routeName}`);
+            return;
+        }
+
+        const catDiv = document.getElementById(`cat-route-${parent}`);
+        const contentDiv = catDiv.querySelector('.category-content');
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'location-item route-item';
+        itemDiv.id = `route-${routeName.replace(/\s+/g, '-')}`;
+
+        const generateDayHtml = (dayNum, dayData) => {
+            if (!dayData) return '';
+            let html = `
+                <div class="route-day" data-day="${dayNum}">
+                    <strong>
+                        Day ${dayNum}
+                        <label class="day-toggle">
+                            <input type="checkbox" checked class="day-vis-toggle" data-day="${dayNum}">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </strong>
+                    <ul>`;
+            dayData.route.forEach((stop, index) => {
+                html += `<li>${stop}`;
+                if (index < dayData.route.length - 1) {
+                    const transport = dayData.transportLabel[index];
+                    const navUrl = dayData.transportation[index];
+                    html += `
+                        <div class="transport-info">
+                            <span class="transport-label">${transport}</span>
+                            <a href="${navUrl}" target="_blank" class="nav-icon" title="导航">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                            </a>
+                        </div>
+                    `;
+                }
+                html += `</li>`;
+            });
+            html += `</ul></div>`;
+            return html;
+        };
+
+        itemDiv.innerHTML = `
+            <div class="item-header">${routeName}</div>
+            <div class="item-detail">
+                ${generateDayHtml(1, routeInfo.day1)}
+                ${generateDayHtml(2, routeInfo.day2)}
+            </div>
+        `;
+
+        // 辅助函数：绘制特定一天的路线（直接使用虚线直线连接）
+        const drawDayRoute = (dayData, color = '#1100ff') => {
+            if (!dayData || dayData.route.length < 2) return null;
+            
+            const waypoints = dayData.route
+                .map(name => getCoords(name))
+                .filter(coords => coords)
+                .map(coords => L.latLng(coords[0], coords[1]));
+
+            if (waypoints.length < 2) return null;
+
+            // 直接绘制虚线直线连接
+            const polyline = L.polyline(waypoints, {
+                color: color,
+                opacity: 0.6,
+                weight: 5,
+                dashArray: '10, 10'
+            }).addTo(map);
+
+            routingControls.push(polyline);
+            return polyline;
+        };
+
+        const activateRoute = () => {
+            removeAllHighlight();
+            clearRouting();
+
+            // 收集所有站点的坐标
+            const allStops = [];
+            if (routeInfo.day1) allStops.push(...routeInfo.day1.route);
+            if (routeInfo.day2) allStops.push(...routeInfo.day2.route);
+            
+            // 去重并高亮站点
+            const uniqueStops = [...new Set(allStops)];
+            uniqueStops.forEach(stopName => {
+                const coords = getCoords(stopName);
+                if (coords) highlightLocation(coords[0], coords[1]);
+            });
+
+            // 初始化显示状态
+            const d1Toggle = itemDiv.querySelector('.day-vis-toggle[data-day="1"]');
+            const d2Toggle = itemDiv.querySelector('.day-vis-toggle[data-day="2"]');
+
+            if (d1Toggle && d1Toggle.checked) drawDayRoute(routeInfo.day1);
+            if (d2Toggle && d2Toggle.checked) drawDayRoute(routeInfo.day2);
+
+            // UI 交互
+            if (infoCard.classList.contains('collapsed')) {
+                if (isMobile()) {
+                    mobileState = 'half-screen';
+                    updateMobileCard();
+                } else {
+                    toggleDesktopCard();
+                }
+            }
+            catDiv.classList.add('expanded');
+            document.querySelectorAll('.location-item').forEach(item => item.classList.remove('active'));
+            itemDiv.classList.add('active');
+
+            // 缩放地图以包含所有点
+            if (routeInfo.day1 && routeInfo.day1.route.length > 0) {
+                const firstStop = getCoords(routeInfo.day1.route[0]);
+                if (firstStop) map.panTo(firstStop, { animate: true });
+            }
+        };
+
+        // 处理开关点击
+        itemDiv.querySelectorAll('.day-vis-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation(); // 防止触发 item-header 的点击
+                
+                // 如果当前 item 是 active 的，则需要重新绘制路线
+                if (itemDiv.classList.contains('active')) {
+                    clearRouting();
+                    const d1 = itemDiv.querySelector('.day-vis-toggle[data-day="1"]');
+                    const d2 = itemDiv.querySelector('.day-vis-toggle[data-day="2"]');
+                    if (d1 && d1.checked) drawDayRoute(routeInfo.day1);
+                    if (d2 && d2.checked) drawDayRoute(routeInfo.day2);
+                }
+            });
+        });
+
+        itemDiv.querySelector('.item-header').addEventListener('click', () => {
+            if (itemDiv.classList.contains('active')) {
+                itemDiv.classList.remove('active');
+                removeAllHighlight();
+                clearRouting();
+            } else {
+                activateRoute();
+            }
+        });
+
+        contentDiv.appendChild(itemDiv);
+    }
+
     Object.keys(STOP_LOCATIONS_HK).forEach(key => registerLocation(key, DESCRIPTION_HK[key], 0));
     Object.keys(NORMAL_LOCATIONS_HK).forEach(key => registerLocation(key, DESCRIPTION_HK[key], 0));
+
+        // 初始化注册路线
+    Object.keys(ROUTES_HK).forEach(key => registerRoutes(key, 0));
+    // Object.keys(ROUTES_ZH).forEach(key => registerRoutes(key, 1)); // 暂时为空
 
     // --- 新增内容浮入浮出逻辑 (保持原有逻辑) ---
     const observerOptions = {

@@ -165,7 +165,7 @@ body, html {
 }
 
 .location-category.expanded .category-content {
-    max-height: 2000px; /* 足够大的高度 */
+    max-height: 5000px; /* 进一步增加分类容器高度限制 */
 }
 
 /* 二级分类：景点项目 */
@@ -206,7 +206,7 @@ body, html {
 }
 
 .location-item.active .item-detail {
-    max-height: 500px;
+    max-height: 2000px; /* 增加高度限制以适配长路线详情 */
     padding: 0.75rem 1.25rem 1.25rem;
     border-top: 1px dashed var(--border-color);
 }
@@ -223,6 +223,144 @@ body, html {
     .item-detail a:hover {
         text-decoration: underline;
     }
+}
+
+/* Route Specific Styles */
+.route-day {
+    margin-top: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.route-day strong {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    background: #f1f5f9;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+
+/* Toggle Switch Styles */
+.day-toggle {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+}
+
+.day-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .3s;
+    border-radius: 20px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(14px);
+}
+
+.route-day ul {
+    list-style: none;
+    padding-left: 0.5rem;
+}
+
+.route-day li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.route-day li:last-child {
+    margin-bottom: 0;
+}
+
+/* 站点圆点 */
+.route-day li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+/* 连接线 */
+.route-day li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 14px;
+    width: 2px;
+    height: calc(100% + 0.5rem);
+    background: #cbd5e1;
+    z-index: 1;
+}
+
+.transport-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.transport-label {
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    padding: 1px 6px;
+    border-radius: 10px;
+}
+
+.nav-icon {
+    display: flex;
+    align-items: center;
+    color: var(--primary-color);
+    transition: transform 0.2s;
+}
+
+@media (hover: hover) {
+    .nav-icon:hover {
+        transform: scale(1.2);
+    }
+}
+
+/* Leaflet Routing Machine Panel Hide */
+.leaflet-routing-container {
+    display: none !important;
 }
 
 /* Map Controls */

@@ -14,25 +14,85 @@ export const STOP_LOCATIONS_HK = {
 
 export const ROUTES_HK = {
     '均衡綫路': {
-        'day1': [],
-        'day2': [],
-        'CO2e': 0,
-        'HKD': 0,
-        'distance': 0
+        day1: {
+            route: ['彩虹站', '北潭涌', '萬宜水庫東壩', '西灣亭', '北潭涌', '西貢'],
+            transportLabel: ['小巴', '小巴', '徒步', '小巴', '小巴'],
+            transportation: [
+                'https://maps.app.goo.gl/2YZEY9zFhg8VpmMa7',
+                'https://maps.app.goo.gl/gPzRcNdvJSkf9Py2A',
+                'https://maps.app.goo.gl/83NAvyBf5B2DUaYq9',
+                'https://hkbus.fandom.com/wiki/%E5%B1%85%E6%B0%91%E5%B7%B4%E5%A3%ABNR29%E7%B7%9A',
+                'https://maps.app.goo.gl/9kzgM4yXnoUsFe9C7'
+            ],
+            CO2e: [2.813, 1.363, 1.190, 0.87, 1.131],
+            HKD: () => getRandomNormal(250, 450),
+            distance: [19.4, 9.4, 7.0, 6.0, 7.8]
+        },
+        day2: {
+            route: ['西貢', '彩虹站'],
+            transportLabel: ['小巴'],
+            transportation: ['https://maps.app.goo.gl/MDS8v94vEg8Qozdd9'],
+            CO2e: [1.697],
+            HKD: () => getRandomNormal(250, 450),
+            distance: [11.7]
+        }
     },
     '休閑綫路': {
-        'day1': [],
-        'day2': [],
-        'CO2e': 0,
-        'HKD': 0,
-        'distance': 0
+        day1: {
+            route: ['彩虹站', '北潭涌', '萬宜水庫東壩', '西貢'],
+            transportLabel: ['小巴', '小巴', '小巴'],
+            transportation: [
+                'https://maps.app.goo.gl/2YZEY9zFhg8VpmMa7',
+                'https://maps.app.goo.gl/gPzRcNdvJSkf9Py2A',
+                'https://maps.app.goo.gl/4iP25Rn3CihGF9yC6'
+            ],
+            CO2e: [2.813, 1.363, 2.48],
+            HKD: () => getRandomNormal(250, 450),
+            distance: [19.4, 9.4, 17.1]
+        },
+        day2: {
+            route: ['西貢', '北潭涌', '西灣亭', '北潭涌', '彩虹站'],
+            transportLabel: ['小巴', '小巴', '小巴', '小巴'],
+            transportation: [
+                'https://maps.app.goo.gl/X3kznWoSXHBLARmU8',
+                'https://hkbus.fandom.com/wiki/%E5%B1%85%E6%B0%91%E5%B7%B4%E5%A3%ABNR29%E7%B7%9A',
+                'https://hkbus.fandom.com/wiki/%E5%B1%85%E6%B0%91%E5%B7%B4%E5%A3%ABNR29%E7%B7%9A',
+                'https://maps.app.goo.gl/xyX1dz2ThHZT6jYy6'
+            ],
+            CO2e: [1.131, 0.87, 0.87, 2.813],
+            HKD: () => getRandomNormal(250, 450),
+            distance: [7.8, 6.0, 6.0, 19.4]
+        }
     },
     '硬核綫路': {
-        'day1': [],
-        'day2': [],
-        'CO2e': 0,
-        'HKD': 0,
-        'distance': 0
+        day1: {
+            route: ['彩虹站', '北潭涌', '萬宜水庫東壩', '西灣亭', '北潭涌', '西貢'],
+            transportLabel: ['小巴', '小巴', '徒步', '小巴', '小巴'],
+            transportation: [
+                'https://maps.app.goo.gl/2YZEY9zFhg8VpmMa7',
+                'https://maps.app.goo.gl/gPzRcNdvJSkf9Py2A',
+                'https://maps.app.goo.gl/83NAvyBf5B2DUaYq9',
+                'https://hkbus.fandom.com/wiki/%E5%B1%85%E6%B0%91%E5%B7%B4%E5%A3%ABNR29%E7%B7%9A',
+                'https://maps.app.goo.gl/9kzgM4yXnoUsFe9C7'
+            ],
+            CO2e: [2.813, 1.363, 1.190, 0.87, 1.131],
+            HKD: () => getRandomNormal(250, 450),
+            distance: [19.4, 9.4, 7.0, 6.0, 7.8]
+        },
+        day2: {
+            route: ['西貢', '北潭涌', '北潭凹', '西灣亭', '北潭涌', '彩虹站'],
+            transportLabel: ['小巴', '小巴', '徒步', '小巴', '小巴'],
+            transportation: [
+                'https://maps.app.goo.gl/X3kznWoSXHBLARmU8',
+                'https://maps.app.goo.gl/eLPufqNqpyqFcvEx8',
+                'https://maps.app.goo.gl/dt5A7CdNX5jj1DQG7',
+                'https://hkbus.fandom.com/wiki/%E5%B1%85%E6%B0%91%E5%B7%B4%E5%A3%ABNR29%E7%B7%9A',
+                'https://maps.app.goo.gl/xyX1dz2ThHZT6jYy6'
+            ],
+            CO2e: [1.131, 0.479, 1.173, 0.87, 2.813],
+            HKD: () => getRandomNormal(250, 450),
+            distance: [7.8, 3.3, 6.9, 6.0, 19.4]
+        }
     }
 }
 
@@ -48,10 +108,11 @@ export const NORMAL_LOCATIONS_HK = {
     '破邊洲': [22.358335251766373, 114.37853133247764],
     '浪茄灣': [22.374462310789482, 114.37626441361076],
     '西灣山': [22.38804003347429, 114.3778717716697],
+    '聯合國教科文組織世界地質公園': [22.364741482222602, 114.3756020687633],
 
     '西灣村': [22.39728309661538, 114.37077097167862],
     '咸田灣': [22.409644592366625, 114.37591185727526],
-    '赤徑': [22.421803396744806, 114.35302302431909]
+    '赤徑': [22.421803396744806, 114.35302302431909],
 }
 
 export const DESCRIPTION_HK = {
@@ -71,6 +132,7 @@ export const DESCRIPTION_HK = {
     '破邊洲': '',
     '浪茄灣': '',
     '西灣山': '',
+    '聯合國教科文組織世界地質公園': '',
     '西灣村': '',
     '咸田灣': '',
     '赤徑': ''
@@ -93,6 +155,7 @@ export const DETAILS_HK = {
     '破邊洲': '',
     '浪茄灣': '',
     '西灣山': '',
+    '聯合國教科文組織世界地質公園': '',
     '西灣村': '',
     '咸田灣': '',
     '赤徑': ''
@@ -117,6 +180,29 @@ export const SUSTAINABLE_TITLES = [
     "地球友善領航員",
     "未來旅行定義者"
 ];
+
+export const ROUTES_ZH = {};
+
+/**
+ * 在指定區間內按正態分佈取值
+ * @param {number} min - 最小值 (如 150)
+ * @param {number} max - 最大值 (如 600)
+ * @param {number} skew - 偏度 (1為標準正態，小於1向高值偏移，大於1向低值偏移)
+ * @returns {number} 隨機整數
+ */
+function getRandomNormal(min, max, skew = 1) {
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    num = num / 10.0 + 0.5; 
+    if (num > 1 || num < 0) return getRandomNormal(min, max, skew);
+    num = Math.pow(num, skew);
+    num *= (max - min);
+    num += min;
+    
+    return Math.round(num);
+}
 
 /**
  * 初始化地图工具，关联地图实例
