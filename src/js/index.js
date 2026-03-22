@@ -93,13 +93,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     startTourBtn.addEventListener('click', async () => {
-        // console.log('Start Tour Button Clicked');
+        alert('1');
         const logined = await isLogined();
-        // console.log('Logined:', logined);
+        alert('2');
         if (logined) {
+            alert('3');
             recordPreviousPage('map.html');
             window.location.href = 'map.html';
         } else {
+            alert('4');
             window.location.href = 'login.html';
             recordPreviousPage('map.html');
         }
