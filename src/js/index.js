@@ -71,18 +71,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         observer.observe(section);
     });
 
+    // --- 滚动指示器点击跳转逻辑 ---
+    const heroContainer = document.querySelector('.hero-container');
+    
+    document.querySelectorAll('.scroll-indicator').forEach(indicator => {
+        indicator.addEventListener('click', () => {
+            const nextSection = indicator.closest('.hero-section').nextElementSibling;
+            if (nextSection) {
+                nextSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    document.querySelectorAll('.scroll-indicator-up').forEach(indicator => {
+        indicator.addEventListener('click', () => {
+            const prevSection = indicator.closest('.hero-section').previousElementSibling;
+            if (prevSection) {
+                prevSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
     startTourBtn.addEventListener('click', async () => {
+        // console.log('Start Tour Button Clicked');
         const logined = await isLogined();
+        // console.log('Logined:', logined);
         if (logined) {
-            recordPreviousPage('route-choice.html');
-            window.location.href = 'route-choice.html';
+            recordPreviousPage('map.html');
+            window.location.href = 'map.html';
         } else {
             window.location.href = 'login.html';
-            recordPreviousPage('index.html');
+            recordPreviousPage('map.html');
         }
     });
 
     exploreBtn.addEventListener('click', () => {
-        window.location.href = 'preview-map.html';
+        // window.location.href = '';
     });
 });

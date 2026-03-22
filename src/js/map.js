@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             navBtn.textContent = '登入';
             navBtn.href = 'login.html';
-            recordPreviousPage('preview-map.html');
+            recordPreviousPage('map.html');
         }
     };
     checkLogin();
@@ -145,6 +145,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         infoCard.classList.remove('collapsed', 'half-screen', 'full-screen');
         infoCard.classList.add(mobileState);
         if (desktopFab) desktopFab.style.display = 'none';
+
+        // 互斥逻辑：如果下方卡片展开，上方导航栏必须完全收起
+        if (isMobile() && (mobileState === 'half-screen' || mobileState === 'full-screen')) {
+            if (typeof navState !== 'undefined' && navState !== 'collapsed') {
+                navState = 'collapsed';
+                updateNavUI();
+            }
+        }
     };
 
     if (cardHandle) {
@@ -337,10 +345,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="route-day" data-day="${dayNum}">
                     <strong>
                         Day ${dayNum}
-                        <label class="day-toggle">
-                            <input type="checkbox" checked class="day-vis-toggle" data-day="${dayNum}">
-                            <span class="toggle-slider"></span>
-                        </label>
+                        <div class="toggle-group">
+                            <span class="toggle-label">${dayData.route.length > 0 ? '綫路已顯示' : '綫路已隱藏'}</span>
+                            <label class="day-toggle">
+                                <input type="checkbox" checked class="day-vis-toggle" data-day="${dayNum}">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
                     </strong>
                     <ul>`;
             dayData.route.forEach((stop, index) => {
@@ -414,8 +425,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const d1Toggle = itemDiv.querySelector('.day-vis-toggle[data-day="1"]');
             const d2Toggle = itemDiv.querySelector('.day-vis-toggle[data-day="2"]');
 
-            if (d1Toggle && d1Toggle.checked) drawDayRoute(routeInfo.day1);
-            if (d2Toggle && d2Toggle.checked) drawDayRoute(routeInfo.day2);
+            if (d1Toggle && d1Toggle.checked) drawDayRoute(routeInfo.day1, '#1100ff');
+            if (d2Toggle && d2Toggle.checked) drawDayRoute(routeInfo.day2, '#ef4444');
 
             // UI 交互
             if (infoCard.classList.contains('collapsed')) {
@@ -442,13 +453,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             toggle.addEventListener('click', (e) => {
                 e.stopPropagation(); // 防止触发 item-header 的点击
                 
+                // 更新文字提示
+                const label = toggle.closest('.toggle-group').querySelector('.toggle-label');
+                if (label) {
+                    label.textContent = toggle.checked ? '綫路已顯示' : '綫路已隱藏';
+                }
+
                 // 如果当前 item 是 active 的，则需要重新绘制路线
                 if (itemDiv.classList.contains('active')) {
                     clearRouting();
                     const d1 = itemDiv.querySelector('.day-vis-toggle[data-day="1"]');
                     const d2 = itemDiv.querySelector('.day-vis-toggle[data-day="2"]');
-                    if (d1 && d1.checked) drawDayRoute(routeInfo.day1);
-                    if (d2 && d2.checked) drawDayRoute(routeInfo.day2);
+                    if (d1 && d1.checked) drawDayRoute(routeInfo.day1, '#1100ff');
+                    if (d2 && d2.checked) drawDayRoute(routeInfo.day2, '#ef4444');
                 }
             });
         });
@@ -519,5 +536,92 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (desktopFab) desktopFab.style.display = 'flex';
     } else {
         if (desktopFab) desktopFab.style.display = 'none';
+    }
+
+    // --- 实时导航栏逻辑 ---
+    const navPanel = document.getElementById('nav-panel');
+    const stopNavBtn = document.getElementById('stop-nav-btn');
+    const navHeader = document.querySelector('.nav-header');
+    const navHandle = document.querySelector('.nav-handle');
+    
+    let navState = 'collapsed'; // 'collapsed', 'half-screen', 'full-screen'
+
+    const updateNavUI = () => {
+        navPanel.classList.remove('collapsed', 'half-screen', 'full-screen');
+        navPanel.classList.add(navState);
+
+        // 互斥逻辑：如果上方导航栏展开，下方信息卡片必须完全收起
+        if (isMobile() && (navState === 'half-screen' || navState === 'full-screen')) {
+            if (typeof mobileState !== 'undefined' && mobileState !== 'collapsed') {
+                mobileState = 'collapsed';
+                updateMobileCard();
+            }
+        }
+    };
+
+    /**
+     * 开始导航：显示导航栏
+     */
+    window.startNav = function() {
+        navPanel.classList.remove('nav-hidden');
+        navState = 'collapsed';
+        updateNavUI();
+    };
+
+    /**
+     * 停止导航：隐藏导航栏
+     */
+    window.stopNav = function() {
+        navPanel.classList.add('nav-hidden');
+    };
+
+    // 退出导航按钮
+    if (stopNavBtn) {
+        stopNavBtn.addEventListener('click', (e) => {
+            if (confirm('確認退出嗎?')) {
+                e.stopPropagation();
+                stopNav();
+            }
+        });
+    }
+
+    // 点击 Header 切换状态
+    if (navHeader) {
+        navHeader.addEventListener('click', () => {
+            if (isMobile()) {
+                if (navState === 'collapsed') navState = 'half-screen';
+                else if (navState === 'half-screen') navState = 'full-screen';
+                else navState = 'collapsed';
+            } else {
+                // 电脑端只有收起和展开
+                navState = (navState === 'collapsed') ? 'full-screen' : 'collapsed';
+            }
+            updateNavUI();
+        });
+    }
+
+    // 移动端手柄滑动交互
+    if (navHandle) {
+        let startY = 0;
+        navHandle.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+
+        navHandle.addEventListener('touchend', (e) => {
+            if (!isMobile()) return;
+            const endY = e.changedTouches[0].clientY;
+            const diff = endY - startY;
+
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) { // 向下滑
+                    if (navState === 'collapsed') navState = 'half-screen';
+                    else if (navState === 'half-screen') navState = 'full-screen';
+                } else { // 向上滑
+                    if (navState === 'full-screen') navState = 'half-screen';
+                    else if (navState === 'half-screen') navState = 'collapsed';
+                }
+                updateNavUI();
+            }
+        });
     }
 });
