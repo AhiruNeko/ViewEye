@@ -1,4 +1,4 @@
-import { recordPreviousPage, isLogined } from './supabase.js';
+import { recordPreviousPage, isLogined, getCurrentUser } from './supabase.js';
 import { 
     initMapUtils, 
     addLocation, 
@@ -15,7 +15,7 @@ import {
     ROUTES_ZH
 } from './mapUtils.js';
 
-import { getAIResponse } from './ai.js';
+import { getAIResponse, RECOMMENDED_PROMPTS } from './ai.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 状态管理
@@ -147,9 +147,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     const aiToggleBtn = document.getElementById('ai-toggle-btn');
     const aiInput = document.getElementById('ai-input');
     const aiSendBtn = document.getElementById('ai-send-btn');
+    const aiRandomBtn = document.getElementById('ai-random-btn');
     const aiResponseArea = document.getElementById('ai-response-area');
     const aiLoading = aiResponseArea.querySelector('.ai-loading');
     const aiResponseText = document.getElementById('ai-response-text');
+    let currentPlaceholder = '';
+    let lastPrompt = '';
+    const pickRandomPrompt = () => {
+        if (!Array.isArray(RECOMMENDED_PROMPTS) || RECOMMENDED_PROMPTS.length === 0) return '';
+        if (RECOMMENDED_PROMPTS.length === 1) return RECOMMENDED_PROMPTS[0];
+        let t = '';
+        do {
+            t = RECOMMENDED_PROMPTS[Math.floor(Math.random() * RECOMMENDED_PROMPTS.length)];
+        } while (t === lastPrompt);
+        lastPrompt = t;
+        return t;
+    };
+    const setRandomPlaceholder = () => {
+        currentPlaceholder = pickRandomPrompt();
+        aiInput.placeholder = currentPlaceholder;
+    };
+    setRandomPlaceholder();
+    if (aiRandomBtn) {
+        aiRandomBtn.addEventListener('click', () => {
+            setRandomPlaceholder();
+            aiInput.focus();
+        });
+    }
+    const esc = (s) => s.replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
     const toggleAI = () => {
         aiContainer.classList.toggle('ai-expanded');
@@ -163,18 +188,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const handleAISend = async () => {
-        const prompt = aiInput.value.trim();
+        const typed = aiInput.value.trim();
+        const prompt = typed || currentPlaceholder;
         if (!prompt) return;
 
-        // 显示响应区域和加载动画
         aiResponseArea.classList.remove('hidden');
         aiLoading.classList.remove('hidden');
-        aiResponseText.textContent = '';
+        aiResponseText.innerHTML = '';
+        const user = await getCurrentUser();
+        const name = user.user.user_metadata.name || '用戶';
+        aiResponseText.innerHTML = `<div class="ai-msg user"><span class="label">${name}</span><div class="content">${esc(prompt)}</div></div>`;
         aiInput.value = '';
+        setRandomPlaceholder();
 
         try {
             const response = await getAIResponse(prompt);
-            aiResponseText.textContent = response;
+            aiResponseText.innerHTML += `<div class="ai-msg ai"><span class="label">AI</span><div class="content">${esc(response)}</div></div>`;
             // 自动滚动到底部
             aiResponseArea.scrollTo({
                 top: aiResponseArea.scrollHeight,

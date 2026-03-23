@@ -700,6 +700,11 @@ input:checked + .toggle-slider:before {
     word-break: break-all;    
 }
 
+#ai-input::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
 #ai-send-btn {
     width: 36px;
     height: 36px;
@@ -712,6 +717,30 @@ input:checked + .toggle-slider:before {
     justify-content: center;
     align-items: center;
     transition: background 0.2s;
+}
+
+#ai-random-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: var(--text-main);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+@media (hover: hover) {
+    #ai-random-btn:hover {
+        background: #cbd5e1;
+    }
+}
+
+#ai-input.ai-placeholder {
+    color: var(--text-muted);
 }
 
 #ai-response-area {
@@ -731,6 +760,29 @@ input:checked + .toggle-slider:before {
     display: flex;
     justify-content: center;
     padding: 10px 0;
+}
+
+.ai-msg {
+    margin-bottom: 10px;
+}
+.ai-msg .label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+.ai-msg.user .content {
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 10px;
+}
+.ai-msg.ai .content {
+    background: #f0fdf4;
+    border: 1px solid #d1fae5;
+    border-radius: 12px;
+    padding: 10px;
 }
 
 /* Dot Flashing Animation */
