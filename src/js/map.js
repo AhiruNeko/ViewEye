@@ -12,12 +12,23 @@ import {
     DESCRIPTION_HK,
     DETAILS_HK,
     ROUTES_HK,
-    ROUTES_ZH
+    ROUTES_DESC_HK,
+    ROUTES_LINKED_LISTS_HK,
+    HTML_HK,
+    ROUTES_ZH,
+    ROUTES_DESC_ZH,
+    ROUTES_LINKED_LISTS_ZH,
+    STOP_LOCATIONS_ZH,
+    NORMAL_LOCATIONS_ZH,
+    DESCRIPTION_ZH,
+    DETAILS_ZH,
+    HTML_ZH
 } from './mapUtils.js';
 
 import { getAIResponse, RECOMMENDED_PROMPTS } from './ai.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // console.log(ROUTES_LINKED_LISTS_HK);
     // 状态管理
     let mobileState = 'collapsed'; // 'collapsed', 'half-screen', 'full-screen'
     let navState = 'collapsed'; // 'collapsed', 'half-screen', 'full-screen'
@@ -54,8 +65,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         routingControls = [];
     };
 
-    const getCoords = (name) => {
-        return STOP_LOCATIONS_HK[name] || NORMAL_LOCATIONS_HK[name];
+    const getCoords = (name, parent) => {
+        switch (parent) {
+            case 0: return STOP_LOCATIONS_HK[name] || NORMAL_LOCATIONS_HK[name];
+            case 1: return STOP_LOCATIONS_ZH[name] || NORMAL_LOCATIONS_ZH[name];
+        }
     };
 
     // 2. 导航栏登录状态
@@ -68,6 +82,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'login.html';
         recordPreviousPage('map.html');
     }
+    const user = await getCurrentUser();
+    const name = user.user.user_metadata.name || '用戶';
 
     // 3. 卡片交互逻辑
     const infoCard = document.getElementById('info-card');
@@ -105,6 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const zoomInBtn = document.getElementById('zoom-in');
     const zoomOutBtn = document.getElementById('zoom-out');
     const locateBtn = document.getElementById('locate-user');
+    const openVirtualTourBtn = document.getElementById('open-virtual-tour');
 
     if (zoomInBtn) zoomInBtn.addEventListener('click', () => map.zoomIn());
     if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => map.zoomOut());
@@ -139,6 +156,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (locateBtn) {
         locateBtn.addEventListener('click', () => {
             map.locate({ setView: true, maxZoom: 16 });
+        });
+    }
+    if (openVirtualTourBtn) {
+        openVirtualTourBtn.addEventListener('click', () => {
+            window.location.href = 'virtual-tour.html';
         });
     }
 
@@ -195,15 +217,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         aiResponseArea.classList.remove('hidden');
         aiLoading.classList.remove('hidden');
         aiResponseText.innerHTML = '';
-        const user = await getCurrentUser();
-        const name = user.user.user_metadata.name || '用戶';
         aiResponseText.innerHTML = `<div class="ai-msg user"><span class="label">${name}</span><div class="content">${esc(prompt)}</div></div>`;
         aiInput.value = '';
         setRandomPlaceholder();
 
         try {
             const response = await getAIResponse(prompt);
-            aiResponseText.innerHTML += `<div class="ai-msg ai"><span class="label">AI</span><div class="content">${esc(response)}</div></div>`;
+            aiResponseText.innerHTML += `<div class="ai-msg ai"><span class="label">ViewEye AI</span><div class="content">${esc(response)}</div></div>`;
             // 自动滚动到底部
             aiResponseArea.scrollTo({
                 top: aiResponseArea.scrollHeight,
@@ -334,7 +354,12 @@ document.addEventListener('DOMContentLoaded', async () => {
      */
     window.registerLocation = registerLocation;
     function registerLocation(title, text, parent) {
-        const coords = getCoords(title);
+        let html = window.location.href;
+        switch (parent) {
+            case 0: if (html) html = HTML_HK[title]; break;
+            case 1: if (html) html = HTML_ZH[title]; break;
+        }
+        const coords = getCoords(title, parent);
         if (!coords) {
             console.warn(`Location not found: ${title}`);
             return;
@@ -351,17 +376,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="item-header">${title}</div>
             <div class="item-detail">
                 <p>${text}</p>
-                <a href="#">了解更多</a>
+                <a href="${html}">瞭解更多</a>
             </div>
         `;
 
-        // 统一的激活逻辑：高亮、展开、滚动
         const activateLocation = (fromMap = false) => {
             removeAllHighlight();
             clearRouting();
             highlightLocation(lat, lng);
-            
-            // 如果卡片是收起的，则打开它
             if (infoCard.classList.contains('collapsed')) {
                 if (isMobile()) {
                     mobileState = 'half-screen';
@@ -371,23 +393,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            // 展开所属的一级分类
             catDiv.classList.add('expanded');
-
-            // 激活当前二级分类（展开文段）
             document.querySelectorAll('.location-item').forEach(item => item.classList.remove('active'));
             itemDiv.classList.add('active');
-
-            // 如果是从地图点击触发的，则滚动到侧边栏对应位置
             if (fromMap) {
-                itemDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => {
+                    itemDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
             }
-            
-            // 地图视图平移到该点
             map.panTo([lat, lng], { animate: true });
         };
 
-        // 点击侧边栏标题的行为
         itemDiv.querySelector('.item-header').addEventListener('click', () => {
             if (itemDiv.classList.contains('active')) {
                 itemDiv.classList.remove('active');
@@ -396,8 +412,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 activateLocation(false);
             }
         });
-
-        // 将地点添加到地图，并设置点击标记后的行为
         addLocation(lat, lng, () => {
             if (itemDiv.classList.contains('active')) {
                 itemDiv.classList.remove('active');
@@ -461,9 +475,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             return html;
         };
 
+        const routeDesc = parent === 0 ? ROUTES_DESC_HK[routeName] : ROUTES_DESC_ZH[routeName];
+
         itemDiv.innerHTML = `
             <div class="item-header">${routeName}</div>
             <div class="item-detail">
+                ${routeDesc ? `<p>${routeDesc}</p>` : ''}
+                <button type="button" class="start-btn">开始旅程</button>
                 ${generateDayHtml(1, routeInfo.day1)}
                 ${generateDayHtml(2, routeInfo.day2)}
             </div>
@@ -474,7 +492,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!dayData || dayData.route.length < 2) return null;
             
             const waypoints = dayData.route
-                .map(name => getCoords(name))
+                .map(name => getCoords(name, parent))
                 .filter(coords => coords)
                 .map(coords => L.latLng(coords[0], coords[1]));
 
@@ -572,12 +590,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     Object.keys(STOP_LOCATIONS_HK).forEach(key => registerLocation(key, DESCRIPTION_HK[key], 0));
     Object.keys(NORMAL_LOCATIONS_HK).forEach(key => registerLocation(key, DESCRIPTION_HK[key], 0));
-
-        // 初始化注册路线
     Object.keys(ROUTES_HK).forEach(key => registerRoutes(key, 0));
-    // Object.keys(ROUTES_ZH).forEach(key => registerRoutes(key, 1)); // 暂时为空
 
-    // --- 新增内容浮入浮出逻辑 (保持原有逻辑) ---
     const observerOptions = {
         root: document.querySelector('.hero-container'),
         threshold: 0.5 
@@ -630,6 +644,268 @@ document.addEventListener('DOMContentLoaded', async () => {
     const stopNavBtn = document.getElementById('stop-nav-btn');
     const navHeader = document.querySelector('.nav-header');
     const navHandle = document.querySelector('.nav-handle');
+    const navStatusEl = document.getElementById('nav-status');
+    const navNextEl = document.getElementById('nav-next');
+
+    const navSections = {
+        atLocation: document.getElementById('nav-section-at-location'),
+        onRoute: document.getElementById('nav-section-on-route'),
+        dayIndex: document.getElementById('nav-section-day-index'),
+        allDone: document.getElementById('nav-section-all-done')
+    };
+    const navSustain = {
+        atLocation: document.getElementById('nav-sustain-at-location'),
+        dayIndex: document.getElementById('nav-sustain-day-index'),
+        allDone: document.getElementById('nav-sustain-all-done')
+    };
+    const navSurroundingsSection = document.getElementById('nav-section-surroundings');
+    const navSurroundingsEl = document.getElementById('nav-surroundings');
+
+    const setTextOrHide = (el, text) => {
+        if (!el) return;
+        if (text === null || text === undefined) {
+            el.classList.add('hidden');
+            return;
+        }
+        const s = String(text).trim();
+        if (!s) {
+            el.classList.add('hidden');
+            return;
+        }
+        el.classList.remove('hidden');
+        el.textContent = s;
+    };
+
+    const hasValue = (v) => v !== null && v !== undefined && String(v).trim().length > 0;
+
+    const getAnyCoords = (locName) => STOP_LOCATIONS_HK[locName] || NORMAL_LOCATIONS_HK[locName] || STOP_LOCATIONS_ZH[locName] || NORMAL_LOCATIONS_ZH[locName];
+
+    const openLocationFromNav = (locName) => {
+        const coords = getAnyCoords(locName);
+        if (!coords) return;
+
+        navState = 'collapsed';
+        navPanel.classList.remove('half-screen', 'full-screen');
+        navPanel.classList.add('collapsed');
+
+        if (isMobile()) {
+            mobileState = 'half-screen';
+            updateMobileCard();
+        } else if (infoCard.classList.contains('collapsed')) {
+            toggleDesktopCard();
+        }
+
+        const safeId = locName.replace(/\s+/g, '-');
+        let itemDiv = document.getElementById(`item-${safeId}`);
+        if (!itemDiv) {
+            itemDiv = Array.from(document.querySelectorAll('.location-item')).find(el => {
+                const h = el.querySelector('.item-header');
+                return h && h.textContent.trim() === locName;
+            }) || null;
+        }
+
+        if (itemDiv) {
+            const catDiv = itemDiv.closest('.location-category');
+            if (catDiv) catDiv.classList.add('expanded');
+            document.querySelectorAll('.location-item').forEach(item => item.classList.remove('active'));
+            itemDiv.classList.add('active');
+            setTimeout(() => {
+                itemDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        removeAllHighlight();
+        highlightLocation(coords[0], coords[1]);
+        map.panTo([coords[0], coords[1]], { animate: true });
+    };
+
+    const setSurroundings = (surroundings) => {
+        if (!navSurroundingsSection || !navSurroundingsEl) return;
+        navSurroundingsEl.innerHTML = '';
+
+        if (!Array.isArray(surroundings) || surroundings.length === 0) {
+            navSurroundingsSection.classList.add('hidden');
+            return;
+        }
+
+        const valid = surroundings.filter(s => hasValue(s));
+        if (valid.length === 0) {
+            navSurroundingsSection.classList.add('hidden');
+            return;
+        }
+
+        valid.forEach((name) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'nav-chip';
+            btn.textContent = name;
+            btn.addEventListener('click', () => openLocationFromNav(name));
+            navSurroundingsEl.appendChild(btn);
+        });
+        navSurroundingsSection.classList.remove('hidden');
+    };
+
+    const setRowValue = (rowId, valueElId, value) => {
+        const row = document.getElementById(rowId);
+        const valEl = valueElId ? document.getElementById(valueElId) : null;
+        if (!row) return;
+
+        if (value === null || value === undefined) {
+            row.classList.add('hidden');
+            if (valEl) valEl.textContent = '';
+            return;
+        }
+        const s = String(value).trim();
+        if (!s) {
+            row.classList.add('hidden');
+            if (valEl) valEl.textContent = '';
+            return;
+        }
+        row.classList.remove('hidden');
+        if (valEl) valEl.textContent = s;
+    };
+
+    const setRowLink = (rowId, linkId, href) => {
+        const row = document.getElementById(rowId);
+        const linkEl = document.getElementById(linkId);
+        if (!row || !linkEl) return;
+
+        if (href === null || href === undefined) {
+            row.classList.add('hidden');
+            linkEl.removeAttribute('href');
+            return;
+        }
+        const s = String(href).trim();
+        if (!s) {
+            row.classList.add('hidden');
+            linkEl.removeAttribute('href');
+            return;
+        }
+        row.classList.remove('hidden');
+        linkEl.href = s;
+    };
+
+    const setRowEmphasis = (rowId, enable) => {
+        const row = document.getElementById(rowId);
+        if (!row) return;
+        row.classList.toggle('nav-row-emphasis', !!enable && !row.classList.contains('hidden'));
+    };
+
+    const showOnlySection = (key) => {
+        Object.entries(navSections).forEach(([k, el]) => {
+            if (!el) return;
+            if (k === key) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        });
+    };
+
+    const sectionHasVisibleRows = (sectionEl) => {
+        if (!sectionEl) return false;
+        return Array.from(sectionEl.querySelectorAll('.nav-row')).some(r => !r.classList.contains('hidden'));
+    };
+
+    function setNavAtLocation(routeName, parent, location, nextLocatioin, CO2e, distance, visits, surroundings) {
+        let place = '';
+        switch (parent) {
+            case 0: place = '香港西貢'; break;
+            case 1: place = '珠海'; break;
+        }
+        showOnlySection('atLocation');
+
+        setRowValue('nav-row-cur-location', 'nav-cur-location', location);
+        setRowValue('nav-row-next-location', 'nav-next-location', nextLocatioin);
+        setRowValue('nav-row-day', 'nav-day', place + '-' + routeName);
+        setRowValue('nav-row-co2e', 'nav-co2e', hasValue(CO2e) ? `${CO2e}kg` : null);
+        setRowValue('nav-row-distance', 'nav-distance', hasValue(distance) ? `${distance}km` : null);
+        setRowValue('nav-row-visits', 'nav-visits', visits);
+        setRowEmphasis('nav-row-co2e', hasValue(CO2e));
+        setRowEmphasis('nav-row-distance', hasValue(distance));
+        setRowEmphasis('nav-row-visits', hasValue(visits));
+        if (navSustain.atLocation) {
+            navSustain.atLocation.classList.toggle('hidden', !(hasValue(CO2e) || hasValue(distance)));
+        }
+        setSurroundings(surroundings);
+
+        setTextOrHide(navNextEl, location === null || location === undefined ? null : `已到達: ${location}`);
+        setTextOrHide(navStatusEl, nextLocatioin === null || nextLocatioin === undefined ? null : `下一站: ${nextLocatioin}`);
+
+        if (navSections.atLocation && !sectionHasVisibleRows(navSections.atLocation)) {
+            navSections.atLocation.classList.add('hidden');
+        }
+    };
+    window.setNavAtLocation = setNavAtLocation;
+
+    function setNavOnRoute(from, to, transportLable, transportation, surroundings) {
+        showOnlySection('onRoute');
+
+        setRowValue('nav-row-from', 'nav-from', from);
+        setRowValue('nav-row-to', 'nav-to', to);
+        setRowValue('nav-row-transport-label', 'nav-transport-label', transportLable);
+        setRowLink('nav-row-transport-link', 'nav-transport-link', transportation);
+        setSurroundings(surroundings);
+
+        const routeText = (from !== null && from !== undefined && String(from).trim()) || (to !== null && to !== undefined && String(to).trim())
+            ? `路程: ${[from, to].filter(v => v !== null && v !== undefined && String(v).trim()).join(' → ')}`
+            : null;
+        setTextOrHide(navNextEl, routeText);
+        setTextOrHide(navStatusEl, transportLable === null || transportLable === undefined ? null : `交通: ${transportLable}`);
+
+        if (navSections.onRoute && !sectionHasVisibleRows(navSections.onRoute)) {
+            navSections.onRoute.classList.add('hidden');
+        }
+    };
+    window.setNavOnRoute = setNavOnRoute;
+
+    function setNavADayDone(day, HKD, totalCO2e, totalDistance, totalHKD, totalVisits, accommodation, surroundings) {
+        showOnlySection('dayIndex');
+
+        setRowValue('nav-row-accommodation', 'nav-accommodation', hasValue(accommodation) ? accommodation : null);
+        setRowValue('nav-row-total-co2e', 'nav-total-co2e', hasValue(totalCO2e) ? `${totalCO2e}kg` : null);
+        setRowValue('nav-row-total-distance', 'nav-total-distance', hasValue(totalDistance) ? `${totalDistance}km` : null);
+        setRowValue('nav-row-total-hkd', 'nav-total-hkd', hasValue(totalHKD) ? `${totalHKD}HKD` : null);
+        setRowValue('nav-row-total-visits', 'nav-total-visits', totalVisits);
+        setRowEmphasis('nav-row-total-co2e', hasValue(totalCO2e));
+        setRowEmphasis('nav-row-total-distance', hasValue(totalDistance));
+        setRowEmphasis('nav-row-total-hkd', hasValue(totalHKD));
+        setRowEmphasis('nav-row-total-visits', hasValue(totalVisits));
+        if (navSustain.dayIndex) {
+            navSustain.dayIndex.classList.toggle('hidden', !(hasValue(HKD) || hasValue(totalCO2e) || hasValue(totalDistance) || hasValue(totalHKD)));
+        }
+        setSurroundings(surroundings);
+
+        setTextOrHide(navNextEl, day === null || day === undefined ? null : `您已完成第${day}天的行程！`);
+        setTextOrHide(navStatusEl, null);
+
+        if (navSections.dayIndex && !sectionHasVisibleRows(navSections.dayIndex)) {
+            navSections.dayIndex.classList.add('hidden');
+        }
+    };
+    window.setNavADayDone = setNavADayDone;
+
+    function setNavAllDone(totalCO2e, totalDistance, totalHKD, totalVisits, surroundings) {
+        showOnlySection('allDone');
+
+        setRowValue('nav-row-all-co2e', 'nav-all-co2e', hasValue(totalCO2e) ? `${totalCO2e}kg` : null);
+        setRowValue('nav-row-all-distance', 'nav-all-distance', hasValue(totalDistance) ? `${totalDistance}km` : null);
+        setRowValue('nav-row-all-hkd', 'nav-all-hkd', hasValue(totalHKD) ? `${totalHKD}HKD` : null);
+        setRowValue('nav-row-all-visits', 'nav-all-visits', totalVisits);
+        setRowEmphasis('nav-row-all-co2e', hasValue(totalCO2e));
+        setRowEmphasis('nav-row-all-distance', hasValue(totalDistance));
+        setRowEmphasis('nav-row-all-hkd', hasValue(totalHKD));
+        setRowEmphasis('nav-row-all-visits', hasValue(totalVisits));
+        if (navSustain.allDone) {
+            navSustain.allDone.classList.toggle('hidden', !(hasValue(totalCO2e) || hasValue(totalDistance) || hasValue(totalHKD)));
+        }
+        setSurroundings(surroundings);
+
+        setTextOrHide(navNextEl, '您已完成這趟旅程！');
+        setTextOrHide(navStatusEl, null);
+
+        if (navSections.allDone && !sectionHasVisibleRows(navSections.allDone)) {
+            navSections.allDone.classList.add('hidden');
+        }
+    };
+    window.setNavAllDone = setNavAllDone;
     
     const updateNavUI = () => {
         navPanel.classList.remove('collapsed', 'half-screen', 'full-screen');

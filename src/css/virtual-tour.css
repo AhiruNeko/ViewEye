@@ -1,0 +1,125 @@
+ :root {
+     --primary-color: #10b981;
+     --primary-hover: #059669;
+     --text-main: #1e293b;
+     --border-color: rgba(255, 255, 255, 0.2);
+ }
+ 
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+ }
+ 
+ html, body {
+     height: 100%;
+     overflow: hidden;
+     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+     background: #0b1220;
+ }
+ 
+ .navbar {
+     width: 100%;
+     height: 64px;
+     background: rgba(0, 0, 0, 0.2);
+     backdrop-filter: blur(10px);
+     border-bottom: 1px solid var(--border-color);
+     position: fixed;
+     top: 0;
+     left: 0;
+     z-index: 1000;
+ }
+ 
+ .nav-container {
+     max-width: 1200px;
+     height: 100%;
+     margin: 0 auto;
+     padding: 0 1.5rem;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+ }
+ 
+ .nav-logo {
+     font-size: 1.5rem;
+     font-weight: 800;
+     color: white;
+     text-decoration: none;
+     letter-spacing: -0.025em;
+ }
+ 
+ .login-btn {
+     padding: 0.5rem 1.25rem;
+     background-color: var(--primary-color);
+     color: white;
+     text-decoration: none;
+     border-radius: 0.5rem;
+     font-weight: 600;
+     font-size: 0.875rem;
+     transition: background-color 0.2s ease;
+ }
+ 
+ @media (hover: hover) {
+     .login-btn:hover {
+         background-color: var(--primary-hover);
+     }
+ }
+ 
+ .tour-shell {
+     height: 100dvh;
+     padding-top: 64px;
+     display: flex;
+ }
+ 
+ .tour-stage {
+     flex: 1;
+     min-width: 0;
+     height: calc(100dvh - 64px);
+     padding: 16px;
+     display: flex;
+ }
+ 
+ #LfdIOTJSE {
+     width: 100%;
+     height: 100%;
+     border-radius: 18px;
+     overflow: hidden;
+     background: rgba(255, 255, 255, 0.06);
+     border: 1px solid rgba(255, 255, 255, 0.14);
+     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+ }
+ 
+ #LfdIOTJSE iframe,
+ #LfdIOTJSE > div,
+ #LfdIOTJSE canvas,
+ #LfdIOTJSE video {
+     width: 100% !important;
+     height: 100% !important;
+ }
+ 
+ @media (max-width: 768px) {
+     .navbar {
+         height: 56px;
+     }
+ 
+     .nav-container {
+         padding: 0 1rem;
+     }
+ 
+     .nav-logo {
+         font-size: 1.25rem;
+     }
+ 
+     .tour-shell {
+         padding-top: 56px;
+     }
+ 
+     .tour-stage {
+         height: calc(100dvh - 56px);
+         padding: 10px;
+     }
+ 
+     #LfdIOTJSE {
+         border-radius: 14px;
+     }
+ }

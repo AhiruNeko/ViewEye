@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     exploreBtn.addEventListener('pointerup', () => {
-        // window.location.href = '';
+        window.location.href = 'virtual-tour.html';
     });
 
     exploreBtn.addEventListener('pointerdown', (e) => {

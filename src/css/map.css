@@ -67,6 +67,27 @@ body, html {
     }
 }
 
+.start-btn {
+    padding: 0.5rem 1.25rem;
+    background-color: transparent;
+    color: var(--primary-color);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background-color 0.2s ease;
+    border: 3px solid var(--primary-color);
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+@media (hover: hover) {
+    .start-btn:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+}
+
 /* Map Style */
 #map {
     width: 100%;
@@ -433,6 +454,11 @@ input:checked + .toggle-slider:before {
     color: var(--primary-color);
 }
 
+#open-virtual-tour {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* Real-time Navigation Panel Style */
 #nav-panel {
     position: fixed;
@@ -511,6 +537,120 @@ input:checked + .toggle-slider:before {
     transition: opacity 0.3s ease;
 }
 
+.nav-dynamic {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.nav-section {
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    background: #ffffff;
+    padding: 6px 12px;
+}
+
+.nav-sustain {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 4px 0 10px;
+}
+
+.nav-sustain-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.nav-surroundings-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-main);
+    padding: 4px 0 10px;
+}
+
+.nav-surroundings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.nav-chip {
+    border: 1px solid var(--border-color);
+    background: #ffffff;
+    color: var(--text-main);
+    border-radius: 999px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+@media (hover: hover) {
+    .nav-chip:hover {
+        background: #f0fdf4;
+        color: var(--primary-color);
+        border-color: rgba(16, 185, 129, 0.35);
+    }
+}
+
+.nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-key {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    flex: 0 0 auto;
+}
+
+.nav-val {
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: right;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.nav-row.nav-row-emphasis {
+    border-top: none;
+    background: rgba(16, 185, 129, 0.1);
+    /* border: 1px solid rgba(16, 185, 129, 0.25); */
+    border-left: 12px solid var(--primary-color);
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+}
+
+.nav-row.nav-row-emphasis .nav-key {
+    color: var(--text-main);
+    font-size: 1rem;
+}
+
+.nav-row.nav-row-emphasis .nav-val {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.nav-row.hidden,
+.nav-sustain.hidden,
+.nav-section.hidden,
+#nav-status.hidden,
+#nav-next.hidden {
+    display: none !important;
+}
+
 .nav-panel.collapsed .nav-content {
     opacity: 0;
     pointer-events: none;
@@ -538,7 +678,7 @@ input:checked + .toggle-slider:before {
     #nav-panel {
         top: 80px; /* Below navbar (64px) + margin */
         left: 20px;
-        width: 320px;
+        width: 400px;
         height: calc(100% - 100px);
         border-radius: 1.5rem;
         z-index: 600; /* 电脑端可以稍低一些 */

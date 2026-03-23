@@ -1,5 +1,9 @@
+import { LinkedList } from './utils.js';
+
 let currentMap = null;
 let locationLayer = null;
+
+// 香港
 
 export const STOP_LOCATIONS_HK = {
     '彩虹站': [22.334952492505064, 114.20898295313086],
@@ -11,6 +15,12 @@ export const STOP_LOCATIONS_HK = {
     '西灣亭': [22.394808336734126, 114.36017762550597],
     '萬宜水庫東壩': [22.362059626691234, 114.37143623814325]
 };
+
+export const ROUTES_DESC_HK = {
+    '均衡綫路': '均衡了徒步與賞景，適合大部分人。',
+    '休閑綫路': '以賞景爲主，較爲輕鬆，適合帶有老人小孩的家庭出行，也適合度假放鬆。',
+    '硬核綫路': '包含高强度徒步鍛煉，也能欣賞沿途風景，適合登山愛好者或探險家。'
+}
 
 export const ROUTES_HK = {
     '均衡綫路': {
@@ -24,17 +34,39 @@ export const ROUTES_HK = {
                 'https://hkbus.fandom.com/wiki/%E5%B1%85%E6%B0%91%E5%B7%B4%E5%A3%ABNR29%E7%B7%9A',
                 'https://maps.app.goo.gl/9kzgM4yXnoUsFe9C7'
             ],
-            CO2e: [2.813, 1.363, 1.190, 0.87, 1.131],
+            CO2e: [null, 2.813, 1.363, 1.190, 0.87, 1.131],
             HKD: () => getRandomNormal(250, 450),
-            distance: [19.4, 9.4, 7.0, 6.0, 7.8]
+            distance: [null, 19.4, 9.4, 7.0, 6.0, 7.8],
+            visits: [null, null, 1, null, null, 2],
+            surroundings: [
+                ['彩虹站'],
+                ['彩虹站', '北潭涌'],
+                ['北潭涌'],
+                ['北潭涌', '萬宜水庫東壩'],
+                ['萬宜水庫東壩', '聯合國教科文組織世界地質公園', '破邊洲'],
+                ['萬宜水庫東壩', '西灣亭', '浪茄灣', '西灣山'],
+                ['西灣亭'],
+                ['西灣亭', '北潭涌'],
+                ['北潭涌'],
+                ['北潭涌', '西貢'],
+                ['西貢', 'WM Hotel', '西貢碼頭', '萬宜遊樂場', 'Lobster Une', '海鮮街', '天后古廟', '火山探知館']
+            ],
+            accommodation: 'WM Hotel'
         },
         day2: {
             route: ['西貢', '彩虹站'],
             transportLabel: ['小巴'],
             transportation: ['https://maps.app.goo.gl/MDS8v94vEg8Qozdd9'],
-            CO2e: [1.697],
+            CO2e: [null, 1.697],
             HKD: () => getRandomNormal(250, 450),
-            distance: [11.7]
+            distance: [null, 11.7],
+            visits: [2, null],
+            surroundings: [
+                ['西貢', 'WM Hotel', '西貢碼頭', '萬宜遊樂場', 'Lobster Une', '海鮮街', '天后古廟', '火山探知館'],
+                ['西貢', '彩虹站'],
+                ['彩虹站']
+            ],
+            accommodation: 'WM Hotel'
         }
     },
     '休閑綫路': {
@@ -46,9 +78,20 @@ export const ROUTES_HK = {
                 'https://maps.app.goo.gl/gPzRcNdvJSkf9Py2A',
                 'https://maps.app.goo.gl/4iP25Rn3CihGF9yC6'
             ],
-            CO2e: [2.813, 1.363, 2.48],
+            CO2e: [null, 2.813, 1.363, 2.48],
             HKD: () => getRandomNormal(250, 450),
-            distance: [19.4, 9.4, 17.1]
+            distance: [null, 19.4, 9.4, 17.1],
+            visits: [null, null, 1, 2],
+            surroundings: [
+                ['彩虹站'],
+                ['彩虹站', '北潭涌'],
+                ['北潭涌'],
+                ['北潭涌', '萬宜水庫東壩'],
+                ['萬宜水庫東壩', '聯合國教科文組織世界地質公園', '破邊洲'],
+                ['萬宜水庫東壩', '西貢'],
+                ['西貢', 'WM Hotel', '西貢碼頭', '萬宜遊樂場', 'Lobster Une', '海鮮街', '天后古廟', '火山探知館']
+            ],
+            accommodation: 'WM Hotel'
         },
         day2: {
             route: ['西貢', '北潭涌', '西灣亭', '北潭涌', '彩虹站'],
@@ -59,9 +102,22 @@ export const ROUTES_HK = {
                 'https://hkbus.fandom.com/wiki/%E5%B1%85%E6%B0%91%E5%B7%B4%E5%A3%ABNR29%E7%B7%9A',
                 'https://maps.app.goo.gl/xyX1dz2ThHZT6jYy6'
             ],
-            CO2e: [1.131, 0.87, 0.87, 2.813],
+            CO2e: [null, 1.131, 0.87, 0.87, 2.813],
             HKD: () => getRandomNormal(250, 450),
-            distance: [7.8, 6.0, 6.0, 19.4]
+            distance: [null, 7.8, 6.0, 6.0, 19.4],
+            visits: [2, null, null, null, null],
+            surroundings: [
+                ['西貢', 'WM Hotel', '西貢碼頭', '萬宜遊樂場', 'Lobster Une', '海鮮街', '天后古廟', '火山探知館'],
+                ['西貢', '北潭涌'],
+                ['北潭涌'],
+                ['北潭涌', '西灣亭'],
+                ['西灣亭'],
+                ['西灣亭', '北潭涌'],
+                ['北潭涌'],
+                ['北潭涌', '彩虹站'],
+                ['彩虹站']
+            ],
+            accommodation: 'WM Hotel'
         }
     },
     '硬核綫路': {
@@ -75,9 +131,24 @@ export const ROUTES_HK = {
                 'https://hkbus.fandom.com/wiki/%E5%B1%85%E6%B0%91%E5%B7%B4%E5%A3%ABNR29%E7%B7%9A',
                 'https://maps.app.goo.gl/9kzgM4yXnoUsFe9C7'
             ],
-            CO2e: [2.813, 1.363, 1.190, 0.87, 1.131],
+            CO2e: [null, 2.813, 1.363, 1.190, 0.87, 1.131],
             HKD: () => getRandomNormal(250, 450),
-            distance: [19.4, 9.4, 7.0, 6.0, 7.8]
+            distance: [null, 19.4, 9.4, 7.0, 6.0, 7.8],
+            visits: [null, null, 1, null, null, 2],
+            surroundings: [
+                ['彩虹站'],
+                ['彩虹站', '北潭涌'],
+                ['北潭涌'],
+                ['北潭涌', '萬宜水庫東壩'],
+                ['萬宜水庫東壩', '聯合國教科文組織世界地質公園', '破邊洲'],
+                ['萬宜水庫東壩', '西灣亭', '浪茄灣', '西灣山'],
+                ['西灣亭'],
+                ['西灣亭', '北潭涌'],
+                ['北潭涌'],
+                ['北潭涌', '西貢'],
+                ['西貢', 'WM Hotel', '西貢碼頭', '萬宜遊樂場', 'Lobster Une', '海鮮街', '天后古廟', '火山探知館']
+            ],
+            accommodation: 'WM Hotel'
         },
         day2: {
             route: ['西貢', '北潭涌', '北潭凹', '西灣亭', '北潭涌', '彩虹站'],
@@ -89,12 +160,29 @@ export const ROUTES_HK = {
                 'https://hkbus.fandom.com/wiki/%E5%B1%85%E6%B0%91%E5%B7%B4%E5%A3%ABNR29%E7%B7%9A',
                 'https://maps.app.goo.gl/xyX1dz2ThHZT6jYy6'
             ],
-            CO2e: [1.131, 0.479, 1.173, 0.87, 2.813],
+            CO2e: [null, 1.131, 0.479, 1.173, 0.87, 2.813],
             HKD: () => getRandomNormal(250, 450),
-            distance: [7.8, 3.3, 6.9, 6.0, 19.4]
+            distance: [null, 7.8, 3.3, 6.9, 6.0, 19.4],
+            visits: [2, null, null, 1, null, null],
+            surroundings: [
+                ['西貢', 'WM Hotel', '西貢碼頭', '萬宜遊樂場', 'Lobster Une', '海鮮街', '天后古廟', '火山探知館'],
+                ['西貢', '北潭涌'],
+                ['北潭涌'],
+                ['北潭涌', '北潭凹'],
+                ['北潭凹'],
+                ['北潭凹', '西灣亭', '西灣村', '咸田灣', '赤徑'],
+                ['西灣亭'],
+                ['西灣亭', '北潭涌'],
+                ['北潭涌'],
+                ['北潭涌', '彩虹站'],
+                ['彩虹站']
+            ],
+            accommodation: 'WM Hotel'
         }
     }
 }
+
+export const ROUTES_LINKED_LISTS_HK = generateRoutesLinkedLists(ROUTES_HK);
 
 export const NORMAL_LOCATIONS_HK = {
     'WM Hotel': [22.38552932793403, 114.27554214056737],
@@ -161,6 +249,49 @@ export const DETAILS_HK = {
     '赤徑': ''
 }
 
+export const HTML_HK = {
+    '彩虹站': 'ChoiHungStation.html',
+    '西貢': 'SaiKung.html',
+    '北潭凹': 'PakTamAu.html',
+    '北潭涌': 'PakTamChung.html',
+    '西灣亭': 'SaiWanPavilion.html',
+    '萬宜水庫東壩': 'HighIslandEastDam.html',
+    'WM Hotel': 'WMHotel.html',
+    '西貢碼頭': 'SaiKungPier.html',
+    '萬宜遊樂場': 'ManYeePlayground.html',
+    'Lobster Une': 'LobsterUne.html',
+    '海鮮街': 'SeafoodStreet.html',
+    '天后古廟': 'TinHauTemple.html',
+    '火山探知館': 'VolcanoDiscoveryCentre.html',
+    '破邊洲': 'PoPinChau.html',
+    '浪茄灣': 'LongKeWan.html',
+    '西灣山': 'SaiWanShan.html',
+    '聯合國教科文組織世界地質公園': 'Geopark.html',
+    '西灣村': 'SaiWanVillage.html',
+    '咸田灣': 'HamTinWan.html',
+    '赤徑': 'ChekKeng.html'
+};
+
+// 珠海
+
+export const STOP_LOCATIONS_ZH = {};
+
+export const NORMAL_LOCATIONS_ZH = {};
+
+export const DESCRIPTION_ZH = {};
+
+export const DETAILS_ZH = {};
+
+export const HTML_ZH = {};
+
+export const ROUTES_ZH = {};
+
+export const ROUTES_LINKED_LISTS_ZH = generateRoutesLinkedLists(ROUTES_ZH);
+
+export const ROUTES_DESC_ZH = {};
+
+// Route info end here
+
 export const SUSTAINABLE_TITLES = [
     "低碳足跡實踐者",
     "無痕山林守護者",
@@ -180,8 +311,6 @@ export const SUSTAINABLE_TITLES = [
     "地球友善領航員",
     "未來旅行定義者"
 ];
-
-export const ROUTES_ZH = {};
 
 /**
  * 在指定區間內按正態分佈取值
@@ -444,4 +573,67 @@ export async function getCoordsFromAddress(address) {
         console.error("Locating error: ", error);
         return null;
     }
+}
+
+function generateRoutesLinkedLists(routes) {
+    let linkedLists = {};
+    Object.entries(routes).forEach(([routeName, route]) => {
+        linkedLists[routeName] = new LinkedList();
+        let key = 0;
+        let totalCO2e = 0;
+        let totalDistance = 0;
+        let totalHKD = 0;
+        let totalVisits = 0;
+        Object.entries(route).forEach(([day, info], dayIndex) => {
+            const length = info.route.length;
+            for (let i = 0; i < length; i++, key++) {
+                linkedLists[routeName].add(key, {
+                    type: 'atLocation',
+                    location: info.route[i],
+                    nextLocation: info.route[i + 1] || null,
+                    day: dayIndex + 1,
+                    CO2e: info.CO2e[i] || null,
+                    distance: info.distance[i] || null,
+                    visits: info.visits[i] || null,
+                    surroundings: info.surroundings[i * 2] || null
+                });
+                totalCO2e += info.CO2e[i] || 0;
+                totalDistance += info.distance[i] || 0;
+                if (i < length - 1) {
+                    linkedLists[routeName].add(key + 0.5, {
+                        type: 'onRoute',
+                        from: info.route[i],
+                        to: info.route[i + 1],
+                        transportLabel: info.transportLabel[i] || null,
+                        transportation: info.transportation[i] || null,
+                        surroundings: info.surroundings[i * 2 + 1] || null
+                    });
+                }
+            }
+            const HKD = info.HKD();
+            totalHKD += HKD || 0;
+            if (dayIndex < Object.keys(route).length - 1) {
+                linkedLists[routeName].add(key - 0.5, {
+                    type: 'aDayDone',
+                    day: dayIndex + 1,
+                    HKD: HKD,
+                    totalCO2e: totalCO2e,
+                    totalDistance: totalDistance,
+                    totalHKD: totalHKD,
+                    totalVisits: totalVisits,
+                    accommodation: info.accommodation || null
+                });
+            } else {
+                linkedLists[routeName].add(key - 0.5, {
+                    type: 'allDone',
+                    day: dayIndex + 1,
+                    totalCO2e: totalCO2e,
+                    totalDistance: totalDistance,
+                    totalHKD: totalHKD,
+                    totalVisits: totalVisits
+                });
+            }
+        });
+    })
+    return linkedLists;
 }
