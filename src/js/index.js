@@ -75,24 +75,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     const heroContainer = document.querySelector('.hero-container');
     
     document.querySelectorAll('.scroll-indicator').forEach(indicator => {
-        indicator.addEventListener('click', () => {
+        indicator.addEventListener('clickpointerup', () => {
             const nextSection = indicator.closest('.hero-section').nextElementSibling;
             if (nextSection) {
                 nextSection.scrollIntoView({ behavior: 'smooth' });
             }
         });
+
+        indicator.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+        });
     });
 
     document.querySelectorAll('.scroll-indicator-up').forEach(indicator => {
-        indicator.addEventListener('click', () => {
+        indicator.addEventListener('pointerup', () => {
             const prevSection = indicator.closest('.hero-section').previousElementSibling;
             if (prevSection) {
                 prevSection.scrollIntoView({ behavior: 'smooth' });
             }
         });
+
+        indicator.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+        });
     });
 
-    startTourBtn.addEventListener('click', () => {
+    startTourBtn.addEventListener('pointerup', () => {
         // alert('2');
         if (IS_LOGINED) {
             // alert('3');
@@ -109,7 +117,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.preventDefault();
     });
 
-    exploreBtn.addEventListener('click', () => {
+    exploreBtn.addEventListener('pointerup', () => {
         // window.location.href = '';
+    });
+
+    exploreBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
     });
 });
