@@ -1,11 +1,5 @@
 import { supabase, isLogined, recordPreviousPage } from './supabase.js';
 
-window.addEventListener('pointerdown', (e) => {
-    alert('点击坐标:', e.clientX, e.clientY);
-    alert('你真正点到的元素是:', e.target);
-    alert('该元素的 ClassList:', e.target.classList);
-}, true); // 注意这个 true，开启捕获模式，谁也拦不住这个监听
-
 document.addEventListener('DOMContentLoaded', async () => {
     const startTourBtn = document.getElementById('start-tour-btn');
     const exploreBtn = document.getElementById('explore-btn');
