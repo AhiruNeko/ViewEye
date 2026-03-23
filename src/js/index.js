@@ -1,6 +1,6 @@
 import { supabase, isLogined, recordPreviousPage } from './supabase.js';
 
-window.addEventListener('mousedown', (e) => {
+window.addEventListener('pointerdown', (e) => {
     alert('点击坐标:', e.clientX, e.clientY);
     alert('你真正点到的元素是:', e.target);
     alert('该元素的 ClassList:', e.target.classList);
