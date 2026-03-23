@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navBtn = document.getElementById('navBtn');
     let isProcessing = false;
 
-    const IS_LOGINED = await isLogined();
+    const IS_LOGINED = isLogined();
     if (IS_LOGINED) {
         navBtn.textContent = '我的賬戶';
         navBtn.href = 'account.html';

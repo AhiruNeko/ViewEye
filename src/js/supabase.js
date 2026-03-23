@@ -50,7 +50,7 @@ export async function getCurrentUser() {
     return data;
 }
 
-export async function isLogined() {
+export function isLogined() {
     const SUPABASE_KEY = 'sb-xyzovwbnldmjjrjbowxx-auth-token';
     const sessionStr = localStorage.getItem(SUPABASE_KEY);
 

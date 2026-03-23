@@ -1,7 +1,7 @@
 import { getCurrentUser, signOut, isLogined, recordPreviousPage } from './supabase.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const IS_LOGINED = await isLogined();
+    const IS_LOGINED = isLogined();
     if (!IS_LOGINED) {
         window.location.href = 'login.html';
     }
