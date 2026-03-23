@@ -51,16 +51,33 @@ export async function getCurrentUser() {
 }
 
 export async function isLogined() {
+    const SUPABASE_KEY = 'sb-xyzovwbnldmjjrjbowxx-auth-token';
+    const sessionStr = localStorage.getItem(SUPABASE_KEY);
+
+    if (!sessionStr) return false;
+
     try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-            console.error('Check login status failed:', error.message);
-            return false;
-        }
-        return !!(session && session.user);
-    } catch (err) {
-        console.error('Unexpected error in isLogined:', err);
+        const session = JSON.parse(sessionStr);
+        const hasToken = !!session.access_token;
+        const expiresAt = session.expires_at;
+        const now = Math.floor(Date.now() / 1000);
+        const isNotExpired = expiresAt ? now < expiresAt : true;
+
+        return hasToken && isNotExpired;
+    } catch (e) {
+        console.error("Decoding Supabase Tokenfail", e);
         return false;
     }
+    // try {
+    //     const { data: { session }, error } = await supabase.auth.getSession();
+        
+    //     if (error) {
+    //         console.error('Check login status failed:', error.message);
+    //         return false;
+    //     }
+    //     return !!(session && session.user);
+    // } catch (err) {
+    //     console.error('Unexpected error in isLogined:', err);
+    //     return false;
+    // }
 }
