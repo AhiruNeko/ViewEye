@@ -50,24 +50,40 @@ export async function getCurrentUser() {
     return data;
 }
 
-export function isLogined() {
+export async function isLogined() {
     const SUPABASE_KEY = 'sb-xyzovwbnldmjjrjbowxx-auth-token';
-    const sessionStr = localStorage.getItem(SUPABASE_KEY);
-
-    if (!sessionStr) return false;
-
-    try {
-        const session = JSON.parse(sessionStr);
-        const hasToken = !!session.access_token;
-        const expiresAt = session.expires_at;
-        const now = Math.floor(Date.now() / 1000);
-        const isNotExpired = expiresAt ? now < expiresAt : true;
-
-        return hasToken && isNotExpired;
-    } catch (e) {
-        console.error("Decoding Supabase Tokenfail", e);
-        return false;
+    // console.log(window.location.pathname);
+    let MAX_RETRIES = 10;
+    if (window.location.pathname === '/src/login.html' || window.location.pathname === '/login.html') {
+        MAX_RETRIES = 1;
     }
+    const RETRY_INTERVAL = 150;
+
+    for (let i = 0; i < MAX_RETRIES; i++) {
+        const sessionStr = localStorage.getItem(SUPABASE_KEY);
+        
+        if (sessionStr) {
+            try {
+                const session = JSON.parse(sessionStr);
+                const hasToken = !!session.access_token;
+                const expiresAt = session.expires_at;
+                const now = Math.floor(Date.now() / 1000);
+                const isNotExpired = expiresAt ? now < expiresAt : true;
+
+                if (hasToken && isNotExpired) {
+                    console.log(`[Auth] Login status confirmed on ${i + 1}th check.`);
+                    return true;
+                }
+            } catch (e) {
+                console.error("Decoding Supabase Token fail", e);
+            }
+        }
+        console.log(`[Auth] checking (${i + 1}/${MAX_RETRIES})...`);
+        await new Promise(resolve => setTimeout(resolve, RETRY_INTERVAL));
+    }
+
+    console.warn("[Auth] Failed to check login status after maximum retries.");
+    return false;
     // try {
     //     const { data: { session }, error } = await supabase.auth.getSession();
         

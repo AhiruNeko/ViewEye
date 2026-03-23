@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. 导航栏登录状态
     const navBtn = document.getElementById('navBtn');
-    const IS_LOGINED = isLogined();
+    const IS_LOGINED = await isLogined();
     if (IS_LOGINED) {
         navBtn.textContent = '我的賬戶';
         navBtn.href = 'account.html';

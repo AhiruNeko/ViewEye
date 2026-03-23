@@ -1,6 +1,6 @@
 import { signInWithGoogle, isLogined } from './supabase.js';
 
-const IS_LOGINED = isLogined();
+const IS_LOGINED = await isLogined();
 if (IS_LOGINED) {
     window.location.href = 'account.html';
 }
