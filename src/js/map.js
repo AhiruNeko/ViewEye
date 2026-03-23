@@ -55,18 +55,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. 导航栏登录状态
     const navBtn = document.getElementById('navBtn');
-    const checkLogin = async () => {
-        const logined = await isLogined();
-        if (logined) {
-            navBtn.textContent = '我的賬戶';
-            navBtn.href = 'account.html';
-        } else {
-            navBtn.textContent = '登入';
-            navBtn.href = 'login.html';
-            recordPreviousPage('map.html');
-        }
-    };
-    checkLogin();
+    const IS_LOGINED = await isLogined();
+    if (IS_LOGINED) {
+        navBtn.textContent = '我的賬戶';
+        navBtn.href = 'account.html';
+    } else {
+        navBtn.textContent = '登入';
+        navBtn.href = 'login.html';
+        recordPreviousPage('map.html');
+    }
 
     // 3. 卡片交互逻辑
     const infoCard = document.getElementById('info-card');

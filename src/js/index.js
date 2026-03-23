@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navBtn = document.getElementById('navBtn');
     let isProcessing = false;
 
-    const logined = await isLogined();
-    if (logined) {
+    const IS_LOGINED = await isLogined();
+    if (IS_LOGINED) {
         navBtn.textContent = '我的賬戶';
         navBtn.href = 'account.html';
     } else {
@@ -92,11 +92,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    startTourBtn.addEventListener('click', async () => {
-        // alert('1');
-        const logined = await isLogined();
+    startTourBtn.addEventListener('click', () => {
         // alert('2');
-        if (logined) {
+        if (IS_LOGINED) {
             // alert('3');
             recordPreviousPage('map.html');
             window.location.href = 'map.html';
