@@ -439,7 +439,7 @@ input:checked + .toggle-slider:before {
     background: var(--card-bg);
     backdrop-filter: blur(15px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    z-index: 600; /* Higher than info-card (500) */
+    z-index: 990; /* 确保在大多数元素之上，但低于 Navbar(1000) 和 AI(995/1100) */
     transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), 
                 opacity 0.3s ease, 
                 height 0.4s cubic-bezier(0.19, 1, 0.22, 1);
@@ -541,6 +541,7 @@ input:checked + .toggle-slider:before {
         width: 320px;
         height: calc(100% - 100px);
         border-radius: 1.5rem;
+        z-index: 600; /* 电脑端可以稍低一些 */
     }
 
     #nav-panel.collapsed {
@@ -560,7 +561,7 @@ input:checked + .toggle-slider:before {
         width: 100%;
         height: auto;
         border-radius: 0 0 1.5rem 1.5rem;
-        z-index: 999; /* Just below navbar (1000) */
+        z-index: 990; /* 高于地点卡片，低于 AI 图标和 Navbar */
     }
 
     #nav-panel.collapsed {
@@ -582,6 +583,201 @@ input:checked + .toggle-slider:before {
     .nav-handle {
         order: 3; /* Move handle to bottom */
     }
+}
+
+/* AI Chat Styles */
+#ai-container {
+    position: fixed;
+    top: 80px; /* Below desktop navbar (64px + 16px) */
+    left: 20px;
+    z-index: 490; /* 低于信息卡片(500)和导航栏(990)，避免遮挡 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    max-width: calc(100vw - 40px);
+}
+
+#ai-container.ai-expanded {
+    z-index: 1100; /* 展开时确保在最顶层，高于 Navbar */
+}
+
+/* Position adjustment when nav-panel is visible */
+#nav-panel:not(.nav-hidden) ~ #ai-container {
+    transform: translateY(80px); /* Move down when nav bar is present on desktop */
+}
+
+@media (max-width: 768px) {
+    #ai-container {
+        top: 72px; /* Below mobile navbar (56px + 16px) */
+    }
+    
+    /* On mobile, if nav is shown (it's at top), move AI down further to avoid collision with nav handle/header */
+    /* 当导航栏显示时（即使是收起状态也会占据一定高度），AI 容器向下避让 */
+    #nav-panel:not(.nav-hidden) ~ #ai-container {
+        transform: translateY(70px); 
+    }
+
+    #ai-container.ai-expanded .ai-chat-box {
+        width: calc(100vw - 40px);
+        height: auto; /* 高度随内容变化 */
+        max-height: 50dvh; /* 最大不超过屏幕的一半 */
+    }
+
+    #ai-response-area {
+        height: auto; /* 高度随内容变化 */
+        max-height: calc(50dvh - 60px); /* 留出输入框空间，溢出自动滚动 */
+        overflow-y: auto;
+    }
+}
+
+#ai-toggle-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, background 0.3s ease;
+    flex-shrink: 0;
+}
+
+@media (hover: hover) {
+    #ai-toggle-btn:hover {
+        background: var(--primary-hover);
+        transform: scale(1.05);
+    }
+}
+
+.ai-chat-box {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+#ai-container.ai-expanded .ai-chat-box {
+    width: 350px;
+    max-width: calc(100vw - 40px);
+    height: auto;
+    max-height: 400px;
+    opacity: 1;
+}
+
+#ai-container.ai-expanded #ai-toggle-btn {
+    background: #64748b;
+    transform: rotate(90deg);
+}
+
+.ai-input-wrapper {
+    display: flex;
+    padding: 8px;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+#ai-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    outline: none;
+    color: var(--text-main);
+    overflow-wrap: break-word; 
+    word-break: break-all;    
+}
+
+#ai-send-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+#ai-response-area {
+    padding: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    flex: 1;
+    min-height: 0; /* 关键：允许 flex 子项在内容溢出时收缩并滚动 */
+    overflow-y: auto;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    overflow-wrap: break-word; 
+    word-break: break-all;    
+}
+
+.ai-loading {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+/* Dot Flashing Animation */
+.dot-flashing {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: var(--primary-color);
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0.5s;
+}
+.dot-flashing::before, .dot-flashing::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 0;
+}
+.dot-flashing::before {
+    left: -15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: var(--primary-color);
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0s;
+}
+.dot-flashing::after {
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: var(--primary-color);
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 1s;
+}
+
+@keyframes dot-flashing {
+    0% { background-color: var(--primary-color); }
+    50%, 100% { background-color: rgba(16, 185, 129, 0.2); }
+}
+
+.hidden {
+    display: none !important;
 }
 
 /* Desktop Card Style */

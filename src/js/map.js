@@ -15,7 +15,12 @@ import {
     ROUTES_ZH
 } from './mapUtils.js';
 
+import { getAIResponse } from './ai.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
+    // 状态管理
+    let mobileState = 'collapsed'; // 'collapsed', 'half-screen', 'full-screen'
+    let navState = 'collapsed'; // 'collapsed', 'half-screen', 'full-screen'
 
     // 1. 初始化地图 西贡
     const map = L.map('map', {
@@ -60,8 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         navBtn.textContent = '我的賬戶';
         navBtn.href = 'account.html';
     } else {
-        navBtn.textContent = '登入';
-        navBtn.href = 'login.html';
+        window.location.href = 'login.html';
         recordPreviousPage('map.html');
     }
 
@@ -90,7 +94,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 desktopFab.style.opacity = '0';
                 desktopFab.style.pointerEvents = 'none';
                 desktopFab.style.transform = 'translateX(20px)';
+                collapseAI(); // 展开地点列表时收起 AI
             }
+        } else if (!isCollapsed) {
+            collapseAI(); // 展开地点列表时收起 AI
         }
     };
 
@@ -135,20 +142,74 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // --- AI 聊天逻辑 ---
+    const aiContainer = document.getElementById('ai-container');
+    const aiToggleBtn = document.getElementById('ai-toggle-btn');
+    const aiInput = document.getElementById('ai-input');
+    const aiSendBtn = document.getElementById('ai-send-btn');
+    const aiResponseArea = document.getElementById('ai-response-area');
+    const aiLoading = aiResponseArea.querySelector('.ai-loading');
+    const aiResponseText = document.getElementById('ai-response-text');
+
+    const toggleAI = () => {
+        aiContainer.classList.toggle('ai-expanded');
+        if (aiContainer.classList.contains('ai-expanded')) {
+            aiInput.focus();
+        }
+    };
+
+    const collapseAI = () => {
+        aiContainer.classList.remove('ai-expanded');
+    };
+
+    const handleAISend = async () => {
+        const prompt = aiInput.value.trim();
+        if (!prompt) return;
+
+        // 显示响应区域和加载动画
+        aiResponseArea.classList.remove('hidden');
+        aiLoading.classList.remove('hidden');
+        aiResponseText.textContent = '';
+        aiInput.value = '';
+
+        try {
+            const response = await getAIResponse(prompt);
+            aiResponseText.textContent = response;
+            // 自动滚动到底部
+            aiResponseArea.scrollTo({
+                top: aiResponseArea.scrollHeight,
+                behavior: 'smooth'
+            });
+        } catch (error) {
+            aiResponseText.textContent = '抱歉，AI 暫時無法回答，請稍後再試。';
+            console.error('AI Error:', error);
+        } finally {
+            aiLoading.classList.add('hidden');
+        }
+    };
+
+    aiToggleBtn.addEventListener('click', toggleAI);
+    aiSendBtn.addEventListener('click', handleAISend);
+    aiInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleAISend();
+    });
+
+    // 互斥逻辑：如果 AI 展开，而导航或信息卡片也要展开，则收起 AI
+    // 同时也需要在已有的 updateMobileCard 和 updateNavUI 中调用 collapseAI
+
     // 5. 移动端状态切换
-    let mobileState = 'collapsed'; // 'collapsed', 'half-screen', 'full-screen'
-    
     const updateMobileCard = () => {
         infoCard.classList.remove('collapsed', 'half-screen', 'full-screen');
         infoCard.classList.add(mobileState);
         if (desktopFab) desktopFab.style.display = 'none';
 
-        // 互斥逻辑：如果下方卡片展开，上方导航栏必须完全收起
+        // 互斥逻辑：如果下方卡片展开，上方导航栏必须完全收起，AI 也要收起
         if (isMobile() && (mobileState === 'half-screen' || mobileState === 'full-screen')) {
-            if (typeof navState !== 'undefined' && navState !== 'collapsed') {
+            if (navState !== 'collapsed') {
                 navState = 'collapsed';
                 updateNavUI();
             }
+            collapseAI(); // 收起 AI
         }
     };
 
@@ -541,18 +602,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navHeader = document.querySelector('.nav-header');
     const navHandle = document.querySelector('.nav-handle');
     
-    let navState = 'collapsed'; // 'collapsed', 'half-screen', 'full-screen'
-
     const updateNavUI = () => {
         navPanel.classList.remove('collapsed', 'half-screen', 'full-screen');
         navPanel.classList.add(navState);
 
-        // 互斥逻辑：如果上方导航栏展开，下方信息卡片必须完全收起
+        // 互斥逻辑：如果上方导航栏展开，下方信息卡片必须完全收起，AI 也要收起
         if (isMobile() && (navState === 'half-screen' || navState === 'full-screen')) {
-            if (typeof mobileState !== 'undefined' && mobileState !== 'collapsed') {
+            if (mobileState !== 'collapsed') {
                 mobileState = 'collapsed';
                 updateMobileCard();
             }
+            collapseAI(); // 收起 AI
         }
     };
 
@@ -563,6 +623,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         navPanel.classList.remove('nav-hidden');
         navState = 'collapsed';
         updateNavUI();
+        collapseAI(); // 开启导航时收起 AI
     };
 
     /**

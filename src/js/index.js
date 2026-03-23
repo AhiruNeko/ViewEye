@@ -70,12 +70,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.hero-section').forEach(section => {
         observer.observe(section);
     });
-
-    // --- 滚动指示器点击跳转逻辑 ---
-    const heroContainer = document.querySelector('.hero-container');
     
     document.querySelectorAll('.scroll-indicator').forEach(indicator => {
-        indicator.addEventListener('clickpointerup', () => {
+        indicator.addEventListener('pointerup', () => {
             const nextSection = indicator.closest('.hero-section').nextElementSibling;
             if (nextSection) {
                 nextSection.scrollIntoView({ behavior: 'smooth' });
