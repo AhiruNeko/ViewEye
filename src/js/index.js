@@ -111,6 +111,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    startTourBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+    });
+
     exploreBtn.addEventListener('click', () => {
         // window.location.href = '';
     });
