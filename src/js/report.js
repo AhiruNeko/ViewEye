@@ -129,7 +129,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             shareBtn.disabled = true;
             shareBtn.textContent = '生成圖片中…';
             try {
-                // 暂时移除缩放，确保生成高清底稿，再按 2 倍放大
                 const prevTransform = reportStage ? reportStage.style.transform : '';
                 if (reportStage) reportStage.style.transform = 'scale(1)';
                 const canvas = await window.html2canvas(card, {
@@ -150,19 +149,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                         } catch (e) {
                             // fall through to download
                         }
+                    } else {                    
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = 'vieweye-report.png';
+                        document.body.appendChild(link);
+                        link.click();
+                        URL.revokeObjectURL(link.href);
+                        link.remove();
+                        alert('已產生報告圖片並開始下載，請在相簿/下載中分享該圖片');
                     }
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = 'vieweye-report.png';
-                    document.body.appendChild(link);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                    link.remove();
-                    alert('已生成报告图片并开始下载，请在相册/下载中分享该图片。');
                     return;
                 }
             } catch (e) {
-                alert('生成报告图片失败，请稍后再试。');
+                alert('報告圖片失敗，請稍後再試。');
                 return;
             } finally {
                 shareBtn.disabled = false;
