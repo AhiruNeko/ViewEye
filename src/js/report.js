@@ -135,7 +135,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const canvas = await window.html2canvas(card, {
                     useCORS: true,
                     backgroundColor: null,
-                    scale: 2
+                    scale: 2,
+                    width: card.offsetWidth,
+                    height: card.offsetHeight,
+                    scrollX: 0,
+                    scrollY: 0,
+                    x: 0,
+                    y: 0,
+                    logging: false,
                 });
                 if (reportStage) reportStage.style.transform = prevTransform;
                 const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'));

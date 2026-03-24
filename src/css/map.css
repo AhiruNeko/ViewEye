@@ -116,6 +116,7 @@ body, html {
     
     /* 4. 交互动画 */
     transition: all 0.2s ease-in-out;
+    touch-action: manipulation;
 }
 
 .ctrl-btn svg {
