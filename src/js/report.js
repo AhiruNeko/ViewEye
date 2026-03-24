@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'));
                 if (blob) {
                     const file = new File([blob], 'vieweye-report.png', { type: 'image/png' });
-                    if (navigator.share) {
+                    if (navigator.canShare && navigator.canShare({files: [file]})) {
                         try {
                             await navigator.share({
                                 title: '我的 ViewEye 旅行报告',
