@@ -26,6 +26,7 @@ import {
 } from './mapUtils.js';
 
 import { getAIResponse, RECOMMENDED_PROMPTS } from './ai.js';
+import { SUSTAINABLE_TITLES, getRandomItems, SUSTAINABLE_CONCLUSION_HK, SUSTAINABLE_CONCLUSION_ZH, SITES_CONCLUSION_HK, SITES_CONCLUSION_ZH } from './utils.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // console.log(ROUTES_LINKED_LISTS_HK);
@@ -356,8 +357,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     function registerLocation(title, text, parent) {
         let html = window.location.href;
         switch (parent) {
-            case 0: if (html) html = HTML_HK[title]; break;
-            case 1: if (html) html = HTML_ZH[title]; break;
+            case 0: if (html) html = 'sites/' + HTML_HK[title]; break;
+            case 1: if (html) html = 'sites/' + HTML_ZH[title]; break;
         }
         const coords = getCoords(title, parent);
         if (!coords) {
@@ -486,6 +487,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ${generateDayHtml(2, routeInfo.day2)}
             </div>
         `;
+
+        itemDiv.querySelector('.start-btn').addEventListener('click', () => {
+            localStorage.setItem('routeName', routeName);
+            localStorage.setItem('parent', parent);
+            startNav(routeName, parent);
+            let routeLinkedList;
+            switch (parent) {
+                case 0: routeLinkedList = ROUTES_LINKED_LISTS_HK[routeName]; break;
+                case 1: routeLinkedList = ROUTES_LINKED_LISTS_ZH[routeName]; break;
+            }           
+            routeLinkedList.current = routeLinkedList.head;
+            const info = routeLinkedList.current.value;
+            setNavAtLocation(info.location, info.nextLocation, info.CO2e, info.distance, info.visits, info.surroundings);
+        });
 
         // 辅助函数：绘制特定一天的路线（直接使用虚线直线连接）
         const drawDayRoute = (dayData, color = '#1100ff') => {
@@ -646,6 +661,64 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navHandle = document.querySelector('.nav-handle');
     const navStatusEl = document.getElementById('nav-status');
     const navNextEl = document.getElementById('nav-next');
+    const navRegionEl = document.getElementById('nav-region');
+    const navRouteEl = document.getElementById('nav-route');
+    const nextBtn = document.getElementById('next-btn');
+    const backBtn = document.getElementById('back-btn');
+    const navAccommodation = document.getElementById('nav-accommodation');
+    const accInfo = document.getElementById('acc-info');
+    const generateReportBtn = document.getElementById('generate-report-btn');
+
+    generateReportBtn.addEventListener('click', () => {
+        localStorage.setItem('reportPrepared', 'true');
+        window.location.href = 'report.html'
+    });
+
+    accInfo.addEventListener('click', () => {
+        openLocationFromNav(navAccommodation.textContent);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        const routeName = localStorage.getItem('routeName');
+        const parent = localStorage.getItem('parent');
+        if (!routeName || !parent) return;
+        let routeLinkedList;
+        switch (parent) {
+            case '0': routeLinkedList = ROUTES_LINKED_LISTS_HK[routeName]; break;
+            case '1': routeLinkedList = ROUTES_LINKED_LISTS_ZH[routeName]; break;
+        }
+        if (!routeLinkedList) return;
+        const node = routeLinkedList.goForward();
+        if (!node) return;
+        const info = node.value;
+        switch (info.type) {
+            case 'atLocation': setNavAtLocation(info.location, info.nextLocation, info.CO2e, info.distance, info.visits, info.surroundings); break;
+            case 'onRoute': setNavOnRoute(info.from, info.to, info.transportLabel, info.transportation, info.surroundings); break;
+            case 'aDayDone': setNavADayDone(info.day, info.totalCO2e, info.totalDistance, info.totalHKD, info.totalVisits, info.accommodation, info.surroundings); break;
+            case 'allDone': setNavAllDone(info.totalCO2e, info.totalDistance, info.totalHKD, info.totalVisits, info.surroundings); break;
+        }
+    }); 
+
+    backBtn.addEventListener('click', () => {
+        const routeName = localStorage.getItem('routeName');
+        const parent = localStorage.getItem('parent');
+        if (!routeName || !parent) return;
+        let routeLinkedList;
+        switch (parent) {
+            case '0': routeLinkedList = ROUTES_LINKED_LISTS_HK[routeName]; break;
+            case '1': routeLinkedList = ROUTES_LINKED_LISTS_ZH[routeName]; break;
+        }
+        if (!routeLinkedList) return;
+        const node = routeLinkedList.goBack();
+        if (!node) return;
+        const info = node.value;
+        switch (info.type) {
+            case 'atLocation': setNavAtLocation(info.location, info.nextLocation, info.CO2e, info.distance, info.visits, info.surroundings); break;
+            case 'onRoute': setNavOnRoute(info.from, info.to, info.transportLabel, info.transportation, info.surroundings); break;
+            case 'aDayDone': setNavADayDone(info.day, info.totalCO2e, info.totalDistance, info.totalHKD, info.totalVisits, info.accommodation, info.surroundings); break;
+            case 'allDone': setNavAllDone(info.totalCO2e, info.totalDistance, info.totalHKD, info.totalVisits, info.surroundings); break;
+        }
+    }); 
 
     const navSections = {
         atLocation: document.getElementById('nav-section-at-location'),
@@ -711,7 +784,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             itemDiv.classList.add('active');
             setTimeout(() => {
                 itemDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
+            }, 250);
         }
 
         removeAllHighlight();
@@ -804,17 +877,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         return Array.from(sectionEl.querySelectorAll('.nav-row')).some(r => !r.classList.contains('hidden'));
     };
 
-    function setNavAtLocation(routeName, parent, location, nextLocatioin, CO2e, distance, visits, surroundings) {
-        let place = '';
-        switch (parent) {
-            case 0: place = '香港西貢'; break;
-            case 1: place = '珠海'; break;
-        }
+    function setNavAtLocation(location, nextLocatioin, CO2e, distance, visits, surroundings) {
         showOnlySection('atLocation');
 
         setRowValue('nav-row-cur-location', 'nav-cur-location', location);
         setRowValue('nav-row-next-location', 'nav-next-location', nextLocatioin);
-        setRowValue('nav-row-day', 'nav-day', place + '-' + routeName);
         setRowValue('nav-row-co2e', 'nav-co2e', hasValue(CO2e) ? `${CO2e}kg` : null);
         setRowValue('nav-row-distance', 'nav-distance', hasValue(distance) ? `${distance}km` : null);
         setRowValue('nav-row-visits', 'nav-visits', visits);
@@ -826,7 +893,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         setSurroundings(surroundings);
 
-        setTextOrHide(navNextEl, location === null || location === undefined ? null : `已到達: ${location}`);
+        setTextOrHide(navNextEl, location === null || location === undefined ? null : `${location}`);
         setTextOrHide(navStatusEl, nextLocatioin === null || nextLocatioin === undefined ? null : `下一站: ${nextLocatioin}`);
 
         if (navSections.atLocation && !sectionHasVisibleRows(navSections.atLocation)) {
@@ -856,7 +923,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     window.setNavOnRoute = setNavOnRoute;
 
-    function setNavADayDone(day, HKD, totalCO2e, totalDistance, totalHKD, totalVisits, accommodation, surroundings) {
+    function setNavADayDone(day, totalCO2e, totalDistance, totalHKD, totalVisits, accommodation, surroundings) {
         showOnlySection('dayIndex');
 
         setRowValue('nav-row-accommodation', 'nav-accommodation', hasValue(accommodation) ? accommodation : null);
@@ -869,7 +936,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setRowEmphasis('nav-row-total-hkd', hasValue(totalHKD));
         setRowEmphasis('nav-row-total-visits', hasValue(totalVisits));
         if (navSustain.dayIndex) {
-            navSustain.dayIndex.classList.toggle('hidden', !(hasValue(HKD) || hasValue(totalCO2e) || hasValue(totalDistance) || hasValue(totalHKD)));
+            navSustain.dayIndex.classList.toggle('hidden', !(hasValue(totalVisits) || hasValue(totalCO2e) || hasValue(totalDistance) || hasValue(totalHKD)));
         }
         setSurroundings(surroundings);
 
@@ -883,6 +950,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.setNavADayDone = setNavADayDone;
 
     function setNavAllDone(totalCO2e, totalDistance, totalHKD, totalVisits, surroundings) {
+        localStorage.setItem('totalCO2e', totalCO2e);
+        localStorage.setItem('totalDistance', totalDistance);
+        localStorage.setItem('totalHKD', totalHKD);
+        localStorage.setItem('totalVisits', totalVisits);
+        const keywords = getRandomItems(SUSTAINABLE_TITLES, 2);
+        localStorage.setItem('keyword1', keywords[0]);
+        localStorage.setItem('keyword2', keywords[1]);
+        let SUSTAINABLE_CONCLUSION, SITES_CONCLUSION;
+        const parent = localStorage.getItem('parent');
+        switch (parent) {
+            case '0': SUSTAINABLE_CONCLUSION = SUSTAINABLE_CONCLUSION_HK; SITES_CONCLUSION = SITES_CONCLUSION_HK; break;
+            case '1': SUSTAINABLE_CONCLUSION = SUSTAINABLE_CONCLUSION_ZH; SITES_CONCLUSION = SITES_CONCLUSION_ZH; break;
+        }
+        const sus = getRandomItems(SUSTAINABLE_CONCLUSION, 2);
+        const sit = getRandomItems(SITES_CONCLUSION, 2);
+        localStorage.setItem('conclusion1', sit[0]);
+        localStorage.setItem('conclusion2', sus[0]);
+        localStorage.setItem('conclusion3', sit[1]);
+        localStorage.setItem('conclusion4', sus[1]);
         showOnlySection('allDone');
 
         setRowValue('nav-row-all-co2e', 'nav-all-co2e', hasValue(totalCO2e) ? `${totalCO2e}kg` : null);
@@ -924,11 +1010,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     /**
      * 开始导航：显示导航栏
      */
-    window.startNav = function() {
+    window.startNav = function(routeName, parent) {
         navPanel.classList.remove('nav-hidden');
         navState = 'collapsed';
         updateNavUI();
-        collapseAI(); // 开启导航时收起 AI
+        collapseAI();
+        let region = '';
+        switch (parent) {
+            case 0: region = '香港-西贡'; break;
+            case 1: region = '珠海'; break;
+        }
+        setTextOrHide(navRegionEl, region);
+        setTextOrHide(navRouteEl, routeName);
     };
 
     /**

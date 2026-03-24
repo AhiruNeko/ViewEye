@@ -1,4 +1,5 @@
 import { LinkedList } from './utils.js';
+import { formatToFourChars } from './utils.js';
 
 let currentMap = null;
 let locationLayer = null;
@@ -292,26 +293,6 @@ export const ROUTES_DESC_ZH = {};
 
 // Route info end here
 
-export const SUSTAINABLE_TITLES = [
-    "低碳足跡實踐者",
-    "無痕山林守護者",
-    "綠色里程開拓者",
-    "零碳漫步家",
-    "純淨山徑巡邏員",
-    "文化脈絡傳承人",
-    "在地產業支持者",
-    "老店保育同行人",
-    "守護海岸的精靈",
-    "生物多樣性摯友",
-    "山野清道夫",
-    "自然觀察家",
-    "永續旅遊外交官",
-    "生態平衡大師",
-    "和諧旅程建築師",
-    "地球友善領航員",
-    "未來旅行定義者"
-];
-
 /**
  * 在指定區間內按正態分佈取值
  * @param {number} min - 最小值 (如 150)
@@ -592,13 +573,14 @@ function generateRoutesLinkedLists(routes) {
                     location: info.route[i],
                     nextLocation: info.route[i + 1] || null,
                     day: dayIndex + 1,
-                    CO2e: info.CO2e[i] || null,
-                    distance: info.distance[i] || null,
-                    visits: info.visits[i] || null,
+                    CO2e: formatToFourChars(info.CO2e[i] || null),
+                    distance: formatToFourChars(info.distance[i] || null),
+                    visits: formatToFourChars(info.visits[i] || null),
                     surroundings: info.surroundings[i * 2] || null
                 });
                 totalCO2e += info.CO2e[i] || 0;
                 totalDistance += info.distance[i] || 0;
+                totalVisits += info.visits[i] || 0;
                 if (i < length - 1) {
                     linkedLists[routeName].add(key + 0.5, {
                         type: 'onRoute',
@@ -616,21 +598,23 @@ function generateRoutesLinkedLists(routes) {
                 linkedLists[routeName].add(key - 0.5, {
                     type: 'aDayDone',
                     day: dayIndex + 1,
-                    HKD: HKD,
-                    totalCO2e: totalCO2e,
-                    totalDistance: totalDistance,
-                    totalHKD: totalHKD,
-                    totalVisits: totalVisits,
-                    accommodation: info.accommodation || null
+                    HKD: formatToFourChars(HKD || null),
+                    totalCO2e: formatToFourChars(totalCO2e || null),
+                    totalDistance: formatToFourChars(totalDistance || null),
+                    totalHKD: formatToFourChars(totalHKD || null),
+                    totalVisits: formatToFourChars(totalVisits || null),
+                    accommodation: info.accommodation || null,
+                    surroundings: null
                 });
             } else {
                 linkedLists[routeName].add(key - 0.5, {
                     type: 'allDone',
                     day: dayIndex + 1,
-                    totalCO2e: totalCO2e,
-                    totalDistance: totalDistance,
-                    totalHKD: totalHKD,
-                    totalVisits: totalVisits
+                    totalCO2e: formatToFourChars(totalCO2e || null),
+                    totalDistance: formatToFourChars(totalDistance || null),
+                    totalHKD: formatToFourChars(totalHKD || null),
+                    totalVisits: formatToFourChars(totalVisits || null),
+                    surroundings: null
                 });
             }
         });

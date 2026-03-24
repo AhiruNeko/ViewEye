@@ -28,19 +28,54 @@
                 <span id="nav-status">上一站: XXX</span>
                 <span id="nav-next">下一站: 加載中</span>
             </div>
+            <div class="nav-brief">
+                <span id="nav-region">区域: XXX</span>
+                <span id="nav-route">路线: 加載中</span>
+            </div>
             <button id="stop-nav-btn">退出</button>
         </div>
         <div class="nav-content">
             <div id="nav-dynamic" class="nav-dynamic">
+                <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                    <button class="ctrl-btn" id="back-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <button class="ctrl-btn" id="next-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                
                 <div id="nav-section-at-location" class="nav-section hidden">
-                    <div id="nav-row-cur-location" class="nav-row"><span class="nav-key">已到達</span><span id="nav-cur-location" class="nav-val"></span></div>
+                    <div id="nav-row-cur-location" class="nav-row"><span class="nav-key">当前地点</span><span id="nav-cur-location" class="nav-val"></span></div>
                     <div id="nav-row-next-location" class="nav-row"><span class="nav-key">下一站</span><span id="nav-next-location" class="nav-val"></span></div>
                     <div id="nav-sustain-at-location" class="nav-sustain hidden">
                         <div class="nav-sustain-title">你的可持續貢獻</div>
                     </div>
-                    <div id="nav-row-co2e" class="nav-row"><span class="nav-key">本段貢獻碳排放減少量</span><span id="nav-co2e" class="nav-val"></span></div>
-                    <div id="nav-row-distance" class="nav-row"><span class="nav-key">本段行進綠色里程</span><span id="nav-distance" class="nav-val"></span></div>
-                    <div id="nav-row-visits" class="nav-row"><span class="nav-key">本段訪問遺址量</span><span id="nav-visits" class="nav-val"></span></div>
+                    <div id="nav-row-co2e" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">本段貢獻碳排放減少量</span>
+                            <div class="contribution-explain">透過選擇步行或低碳交通取代私家車或的士，降低了途中碳足跡，為減緩全球暖化貢獻力量</div>
+                        </div>
+                        <span id="nav-co2e" class="nav-val"></span>
+                    </div>
+                    <div id="nav-row-distance" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">本段行進綠色里程</span>
+                            <div class="contribution-explain">這不僅是低碳出遊的紀錄，更是對當地寧靜生活的尊重──不去打擾，只留致敬</div>
+                        </div>
+                        <span id="nav-distance" class="nav-val"></span>
+                    </div>
+                    <div id="nav-row-visits" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">本段訪問遺址量</span>
+                            <div class="contribution-explain">每一次對歷史遺蹟的駐足，都是在數位時代與古老文明的對話，有助於喚起社會對文化遺產保護的關注</div>
+                        </div>
+                        <span id="nav-visits" class="nav-val"></span>
+                    </div>
                 </div>
 
                 <div id="nav-section-on-route" class="nav-section hidden">
@@ -58,24 +93,83 @@
                 </div>
 
                 <div id="nav-section-day-index" class="nav-section hidden">
-                    <div id="nav-row-accommodation" class="nav-row"><span class="nav-key">推荐住宿</span><span id="nav-accommodation" class="nav-val"></span></div>
+                    <div id="nav-row-accommodation" class="nav-row">
+                        <span class="nav-key">推荐住宿</span>
+                        <div style="display: flex; flex-direction: row; gap: 2px;">
+                            <svg id="acc-info" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+                            <span id="nav-accommodation" class="nav-val"></span>
+                        </div>
+                    </div>
                     <div id="nav-sustain-day-index" class="nav-sustain hidden">
                         <div class="nav-sustain-title">你的可持續貢獻</div>
                     </div>
-                    <div id="nav-row-total-co2e" class="nav-row"><span class="nav-key">總共貢獻碳排放減少量</span><span id="nav-total-co2e" class="nav-val"></span></div>
-                    <div id="nav-row-total-distance" class="nav-row"><span class="nav-key">總共行進綠色里程</span><span id="nav-total-distance" class="nav-val"></span></div>
-                    <div id="nav-row-total-hkd" class="nav-row"><span class="nav-key">總共本地經濟貢獻</span><span id="nav-total-hkd" class="nav-val"></span></div>
-                    <div id="nav-row-total-visits" class="nav-row"><span class="nav-key">總共訪問遺址量</span><span id="nav-total-visits" class="nav-val"></span></div>
+                    <div id="nav-row-total-co2e" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">總共貢獻碳排放減少量</span>
+                            <div class="contribution-explain">透過選擇步行或低碳交通取代私家車或的士，降低了途中碳足跡，為減緩全球暖化貢獻力量</div>
+                        </div>
+                        <span id="nav-total-co2e" class="nav-val"></span>
+                    </div>
+                    <div id="nav-row-total-distance" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">總共行進綠色里程</span>
+                            <div class="contribution-explain">這不僅是低碳出遊的紀錄，更是對當地寧靜生活的尊重──不去打擾，只留致敬</div>
+                        </div>
+                        <span id="nav-total-distance" class="nav-val"></span>
+                    </div>
+                    <div id="nav-row-total-hkd" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">總共本地經濟貢獻</span>
+                            <div class="contribution-explain">每一筆在鄉村小店或傳統作坊的消費，都在支持本地社區的生計，促進了城鄉資源的公平流動與文化傳承</div>
+                        </div>
+                        <span id="nav-total-hkd" class="nav-val"></span>
+                    </div>
+                    <div id="nav-row-total-visits" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">總共訪問遺址量</span>
+                            <div class="contribution-explain">每一次對歷史遺蹟的駐足，都是在數位時代與古老文明的對話，有助於喚起社會對文化遺產保護的關注</div>
+                        </div>
+                        <span id="nav-total-visits" class="nav-val"></span>
+                    </div>
                 </div>
 
                 <div id="nav-section-all-done" class="nav-section hidden">
                     <div id="nav-sustain-all-done" class="nav-sustain hidden">
                         <div class="nav-sustain-title">你的可持續貢獻</div>
                     </div>
-                    <div id="nav-row-all-co2e" class="nav-row"><span class="nav-key">總共貢獻碳排放減少量</span><span id="nav-all-co2e" class="nav-val"></span></div>
-                    <div id="nav-row-all-distance" class="nav-row"><span class="nav-key">總共行進綠色里程</span><span id="nav-all-distance" class="nav-val"></span></div>
-                    <div id="nav-row-all-hkd" class="nav-row"><span class="nav-key">總共本地經濟貢獻</span><span id="nav-all-hkd" class="nav-val"></span></div>
-                    <div id="nav-row-all-visits" class="nav-row"><span class="nav-key">總共訪問遺址量</span><span id="nav-all-visits" class="nav-val"></span></div>
+                    <div id="nav-row-all-co2e" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">總共貢獻碳排放減少量</span>
+                            <div class="contribution-explain">透過選擇步行或低碳交通取代私家車或的士，降低了途中碳足跡，為減緩全球暖化貢獻力量</div>
+                        </div>
+                        <span id="nav-all-co2e" class="nav-val"></span>
+                    </div>
+                    <div id="nav-row-all-distance" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">總共行進綠色里程</span>
+                            <div class="contribution-explain">這不僅是低碳出遊的紀錄，更是對當地寧靜生活的尊重──不去打擾，只留致敬</div>
+                        </div>
+                        <span id="nav-all-distance" class="nav-val"></span>
+                    </div>
+                    <div id="nav-row-all-hkd" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">總共本地經濟貢獻</span>
+                            <div class="contribution-explain">每一筆在鄉村小店或傳統作坊的消費，都在支持本地社區的生計，促進了城鄉資源的公平流動與文化傳承</div>
+                        </div>
+                        <span id="nav-all-hkd" class="nav-val"></span>
+                    </div>
+                    <div id="nav-row-all-visits" class="nav-row">
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="nav-key">總共訪問遺址量</span>
+                            <div class="contribution-explain">每一次對歷史遺蹟的駐足，都是在數位時代與古老文明的對話，有助於喚起社會對文化遺產保護的關注</div>
+                        </div>
+                        <span id="nav-all-visits" class="nav-val"></span>
+                    </div>
+                    <button id="generate-report-btn" class="generate-report-btn">生成報告</button>
                 </div>
 
                 <div id="nav-section-surroundings" class="nav-section hidden">

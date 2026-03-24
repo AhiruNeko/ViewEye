@@ -79,10 +79,66 @@ body, html {
     border: 3px solid var(--primary-color);
     margin-top: 0.5rem;
     width: 100%;
+    cursor: pointer;
+}
+
+.generate-report-btn {
+    padding: 0.5rem 1.25rem;
+    background-color: transparent;
+    color: var(--primary-color);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background-color 0.2s ease;
+    border: 3px solid var(--primary-color);
+    margin-top: 0.5rem;
+    width: 100%;
+    cursor: pointer;
+}
+
+.ctrl-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    
+    /* 2. 居中内部图标 (Flexbox 是最稳的方法) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 3. 视觉样式 (ViewEye 风格) */
+    background-color: var(--primary-color); /* 经典 Apple 蓝 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+    
+    /* 4. 交互动画 */
+    transition: all 0.2s ease-in-out;
+}
+
+.ctrl-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.ctrl-btn:active {
+    transform: scale(0.95);
 }
 
 @media (hover: hover) {
     .start-btn:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .ctrl-btn:hover {
+        transform: scale(1.1);
+        background-color: var(--primary-hover);
+    }
+
+    .generate-report-btn:hover {
         background-color: var(--primary-color);
         color: white;
     }
@@ -107,6 +163,15 @@ body, html {
     flex-direction: column;
     padding-top: 1rem;
     padding-bottom: 1rem;
+}
+
+#acc-info {
+    cursor: pointer;
+}
+
+.contribution-explain {
+    font-size: 0.875rem;
+    color: var(--text-muted);
 }
 
 .card-handle {
@@ -507,6 +572,18 @@ input:checked + .toggle-slider:before {
     font-weight: 700;
 }
 
+#nav-region {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+#nav-route {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
 #stop-nav-btn {
     background: rgba(255, 255, 255, 0.2);
     border: none;
@@ -641,6 +718,7 @@ input:checked + .toggle-slider:before {
     color: var(--primary-color);
     font-size: 1.2rem;
     font-weight: 800;
+    white-space: nowrap;
 }
 
 .nav-row.hidden,

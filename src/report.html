@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>旅行报告 - ViewEye</title>
+    <link rel="stylesheet" href="css/report.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">ViewEye</a>
+            <div class="nav-actions">
+                <a href="login.html" class="login-btn" id="navBtn">登入</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <section class="report-wrap" aria-label="旅行报告">
+            <div class="report-card" id="reportCard" role="img" aria-label="旅行报告卡片">
+                <div class="report-stage" id="reportStage">
+                <div class="report-overlay">
+                    <div class="report-top">
+                        <div class="report-badge">你的旅行报告</div>
+                        <div class="report-title" id="reportTitle">太棒了！</div>
+                        <div class="report-subtitle" id="reportRoute">路綫載入中…</div>
+                    </div>
+                    <div class="metric" style="margin-top: 20px;">
+                        <div class="metric-text">在這趟旅程中：</div>
+                        <div class="metric-text" id="conclusion-text-1">--</div>
+                        <div class="metric-text" id="conclusion-text-2">--</div>
+                        <div class="metric-text" id="conclusion-text-3">--</div>
+                        <div class="metric-text" id="conclusion-text-4">--</div>
+                        <div class="keyword-list">
+                            <span class="keyword" id="keyword1">--</span>
+                            <span class="keyword" id="keyword2">--</span>
+                        </div>
+                    </div>
+                    <div class="report-mid">
+                        <div class="metric-grid">
+                            <div class="metric">
+                                <div class="metric-label">減少碳排放</div>
+                                <div class="metric-value" id="metricCO2e">--</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">行進綠色里程</div>
+                                <div class="metric-value" id="metricDistance">--</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">貢獻本地經濟</div>
+                                <div class="metric-value" id="metricHKD">--</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">探訪文化與自然遺址</div>
+                                <div class="metric-value" id="metricVisits">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-bottom">
+                        <div class="report-cheer" id="reportCheer">瞭解更多: https://vieweye.vercel.app</div>
+                        <img src="./assets/QRCode.svg" width="80" height="80"></img>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="actions" aria-label="操作">
+            <button class="primary-btn" id="shareBtn" type="button">分享报告</button>
+            <a class="ghost-btn" href="index.html">返回主页</a>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+    <script type="module" src="js/report.js"></script>
+</body>
+</html>
