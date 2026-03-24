@@ -129,30 +129,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             shareBtn.disabled = true;
             shareBtn.textContent = '生成圖片中…';
             try {
-                const prevTransform = reportStage ? reportStage.style.transform : '';
-                if (reportStage) {
-                    reportStage.style.transform = 'none';
-                    reportStage.style.width = '750px';  // 強制固定設計寬度
-                    reportStage.style.height = '1000px'; // 強制固定設計高度
-                }
                 const canvas = await window.html2canvas(card, {
                     useCORS: true,
-                    scale: 2,           // 放大 2 倍確保清晰
-                    backgroundColor: null,
-                    logging: false,
-                    // 以下四行是解決溢出的核心：
-                    width: 750,         // 固定截取寬度
-                    height: 1000,       // 固定截取高度
-                    scrollX: 0,
-                    scrollY: -window.scrollY, // 抵消頁面滾動帶來的偏移
-                    x: card.getBoundingClientRect().left, // 精確定位卡片左上角
-                    y: card.getBoundingClientRect().top + window.scrollY
                 });
-                if (reportStage) {
-                    reportStage.style.transform = prevTransform;
-                    reportStage.style.width = ''; 
-                    reportStage.style.height = '';
-                }
                 const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'));
                 if (blob) {
                     const file = new File([blob], 'vieweye-report.png', { type: 'image/png' });
