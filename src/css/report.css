@@ -19,7 +19,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background: linear-gradient(180deg, #f7fafc 0%, #ffffff 100%);
     color: var(--text-main);
-    overflow: hidden; /* 防止 body 出现滚动条 */
+    overflow: hidden;
     background: url('../assets/reportBgRow.png') no-repeat center center fixed;
     background-size: cover;
 }
@@ -99,13 +99,11 @@
  .report-card {
      width: min(520px, 92vw);
      aspect-ratio: 3 / 4;
-     border-radius: 15px;
      overflow: hidden;
      background-image: url("../assets/report.png");
      background-size: cover;
      background-position: center;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-     border: 2px solid var(--primary-color);
+     box-shadow: 0 0 20px rgba(0, 0, 0, 1);
      position: relative;
  }
  
@@ -304,9 +302,5 @@
          padding-top: 56px;
          justify-content: flex-start;
          padding-top: calc(56px + 14px);
-     }
- 
-     .report-card {
-         border-radius: 10px;
      }
 }
