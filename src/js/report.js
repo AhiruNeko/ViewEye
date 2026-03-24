@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             });
                             return;
                         } catch (e) {
-                            console.log('分享失敗', e);
+                            alert('分享失敗', e);
                         }
                     } else {                    
                         const link = document.createElement('a');
