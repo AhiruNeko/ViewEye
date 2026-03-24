@@ -144,17 +144,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                             });
                             return;
                         } catch (e) {
-                            alert('分享失敗', e);
+                            const link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = 'vieweye-report.png';
+                            document.body.appendChild(link);
+                            link.click();
+                            URL.revokeObjectURL(link.href);
+                            link.remove();
+                            alert('已產生報告圖片並開始下載，請在相簿/下載中分享該圖片');
                         }
-                    } else {                    
-                        const link = document.createElement('a');
-                        link.href = URL.createObjectURL(blob);
-                        link.download = 'vieweye-report.png';
-                        document.body.appendChild(link);
-                        link.click();
-                        URL.revokeObjectURL(link.href);
-                        link.remove();
-                        alert('已產生報告圖片並開始下載，請在相簿/下載中分享該圖片');
                     }
                     return;
                 }
