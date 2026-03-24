@@ -356,6 +356,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.registerLocation = registerLocation;
     function registerLocation(title, text, parent) {
         let html = window.location.href;
+        const siteUrl = window.location.href.replace('map.html', `/virtual-tour.html?site=${title}`);
         switch (parent) {
             case 0: if (html) html = 'sites/' + HTML_HK[title]; break;
             case 1: if (html) html = 'sites/' + HTML_ZH[title]; break;
@@ -377,7 +378,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="item-header">${title}</div>
             <div class="item-detail">
                 <p>${text}</p>
-                <a href="${html}">瞭解更多</a>
+                <a href="${html}" style="margin-right: 0.2rem;">瞭解更多</a>
+                <a href="${siteUrl}" style="margin-left: 0.2rem;">360°全景圖</a>
             </div>
         `;
 
@@ -912,7 +914,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setSurroundings(surroundings);
 
         const routeText = (from !== null && from !== undefined && String(from).trim()) || (to !== null && to !== undefined && String(to).trim())
-            ? `路程: ${[from, to].filter(v => v !== null && v !== undefined && String(v).trim()).join(' → ')}`
+            ? `${[from, to].filter(v => v !== null && v !== undefined && String(v).trim()).join(' → ')}`
             : null;
         setTextOrHide(navNextEl, routeText);
         setTextOrHide(navStatusEl, transportLable === null || transportLable === undefined ? null : `交通: ${transportLable}`);

@@ -250,6 +250,29 @@ export const DETAILS_HK = {
     '赤徑': ''
 }
 
+export const VIRTUAL_TOUR_HK = {
+    '彩虹站': 'https://app.cloudpano.com/tours/LfdIOTJSE',
+    '西貢': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=bMmR8VCu3I',
+    '北潭凹': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=YdHtnjZRvx0',
+    '北潭涌': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=9dgP6b3OdK9',
+    '西灣亭': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=2gIlMpZ0Bs',
+    '萬宜水庫東壩': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=pjye9qrVsH',
+    'WM Hotel': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=ampyHmXQtrn',
+    '西貢碼頭': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=x-QXu8tQC1',
+    '萬宜遊樂場': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=dvO54hYaJo',
+    'Lobster Une': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=dvO54hYaJo',
+    '海鮮街': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=FUa9l7bxKc',
+    '天后古廟': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=ONqgnZN3Tu',
+    '火山探知館': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=o9JzzJamBW',
+    '破邊洲': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=zYS_hBv3hX',
+    '浪茄灣': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=LtjZnABe0M',
+    '西灣山': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=5-PFouAxGf',
+    '聯合國教科文組織世界地質公園': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=6teh5XF5nd',
+    '西灣村': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=7oT637kAC0',
+    '咸田灣': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=awBK4My9pT',
+    '赤徑': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=k3Ep1dVyI'
+}
+
 export const HTML_HK = {
     '彩虹站': 'ChoiHungStation.html',
     '西貢': 'SaiKung.html',
