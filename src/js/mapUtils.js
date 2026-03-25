@@ -250,6 +250,75 @@ export const DETAILS_HK = {
     '赤徑': ''
 }
 
+export const TOILET_HK = {
+    '彩虹站': true,
+    '西貢': true,
+    '北潭凹': true, // 公共厕所位于行山径终点附近
+    '北潭涌': true, // 游客中心旁有大型公厕
+    '西灣亭': true, // 只有临时/简易厕所，但通常标注为有
+    '萬宜水庫東壩': true, // 凉亭附近有旱厕/移动厕所
+    'WM Hotel': true,
+    '西貢碼頭': true,
+    '萬宜遊樂場': true,
+    'Lobster Une': true,
+    '海鮮街': true,
+    '天后古廟': true,
+    '火山探知館': true,
+    '破邊洲': false, // 纯自然景观，无设施
+    '浪茄灣': true,  // 营地附近有极简易旱厕
+    '西灣山': false, // 山顶无设施
+    '聯合國教科文組織世界地質公園': true, // 指东坝游客中心区域
+    '西灣村': true,  // 村内餐厅提供或有公厕
+    '咸田灣': true,  // 村内餐厅提供或有公厕
+    '赤徑': true      // 青年旅舍或公厕
+}
+
+export const RESTAURANT_HK = {
+    '彩虹站': true,
+    '西貢': true,
+    '北潭凹': false, // 只有自动贩卖机，无餐厅
+    '北潭涌': true,  // 小食亭
+    '西灣亭': false, // 仅为出发点，无餐厅
+    '萬宜水庫東壩': false, // 极偶尔有流动小贩，正式餐厅为无
+    'WM Hotel': true,
+    '西貢碼頭': true,
+    '萬宜遊乐場': true,
+    'Lobster Une': true,
+    '海鮮街': true,
+    '天后古廟': true,
+    '火山探知館': true, // 仅为展览馆
+    '破邊洲': false,
+    '浪茄灣': false,
+    '西灣山': false,
+    '聯合國教科文組織世界地質公園': false,
+    '西灣村': true,  // 有多家士多和茶座
+    '咸田灣': true,  // 有著名的安记/海星士多
+    '赤徑': false     // 只有极简易士多，有时不营业，建议设为 false 
+}
+
+export const GOOGLE_MAP_HK = {
+    '彩虹站': 'https://maps.app.goo.gl/5pEHC2Vme6F1pDY67',
+    '西貢': 'https://maps.app.goo.gl/mLoKtSq8pX4XDV9D8',
+    '北潭凹': 'https://maps.app.goo.gl/oWkgZNF23kNjpZ4P7',
+    '北潭涌': 'https://maps.app.goo.gl/dgHSyfxz1VC2qUqNA',
+    '西灣亭': 'https://maps.app.goo.gl/Db9CEEwCJ5HSF3MN8',
+    '萬宜水庫東壩': 'https://maps.app.goo.gl/4yvBsPGfWiU7cqWMA',
+    'WM Hotel': 'https://maps.app.goo.gl/GJz8hsxPn3X7a8a77',
+    '西貢碼頭': 'https://maps.app.goo.gl/TNA3GmmS4q2UW9S57',
+    '萬宜遊樂場': 'https://maps.app.goo.gl/hC3yzQtFvzXMpvxXA',
+    'Lobster Une': 'https://maps.app.goo.gl/w7CqMcBooWzLczhP9',
+    '海鮮街': 'https://maps.app.goo.gl/EjQMrUqTFuUVQbG47',
+    '天后古廟': 'https://maps.app.goo.gl/a9CKEK2nQELKSbqbA',
+    '火山探知館': 'https://maps.app.goo.gl/WuFhFoiv2MrfGJnJ9',
+    '破邊洲': 'https://maps.app.goo.gl/roKEqxjFVg81neAS6',
+    '浪茄灣': 'https://maps.app.goo.gl/jpcdHkPkQtUyBsUM6',
+    '西灣山': 'https://maps.app.goo.gl/H7HwLxNFcXjMXt8F6',
+    '聯合國教科文組織世界地質公園': 'https://maps.app.goo.gl/aK3pFktbJK4U9iny6',
+    '西灣村': 'https://maps.app.goo.gl/PYsLTGrnrByBr1oq9',
+    '咸田灣': 'https://maps.app.goo.gl/vE7vEJCxbBroGyHa7',
+    '赤徑': 'https://maps.app.goo.gl/Gtu4ZJf71PVLN3vi7'
+}
+
 export const VIRTUAL_TOUR_HK = {
     '彩虹站': 'https://app.cloudpano.com/tours/LfdIOTJSE',
     '西貢': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=bMmR8VCu3I',
@@ -313,6 +382,12 @@ export const ROUTES_ZH = {};
 export const ROUTES_LINKED_LISTS_ZH = generateRoutesLinkedLists(ROUTES_ZH);
 
 export const ROUTES_DESC_ZH = {};
+
+export const GOOGLE_MAP_ZH = {};
+
+export const TOILET_ZH = {};
+
+export const RESTAURANT_ZH = {};
 
 // Route info end here
 

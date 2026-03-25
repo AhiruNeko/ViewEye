@@ -22,7 +22,13 @@ import {
     NORMAL_LOCATIONS_ZH,
     DESCRIPTION_ZH,
     DETAILS_ZH,
-    HTML_ZH
+    HTML_ZH,
+    GOOGLE_MAP_HK,
+    GOOGLE_MAP_ZH,
+    TOILET_ZH,
+    RESTAURANT_ZH,
+    TOILET_HK,
+    RESTAURANT_HK,
 } from './mapUtils.js';
 
 import { getAIResponse, RECOMMENDED_PROMPTS } from './ai.js';
@@ -357,9 +363,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     function registerLocation(title, text, parent) {
         let html = window.location.href;
         const siteUrl = window.location.href.replace('map.html', `/virtual-tour.html?site=${title}`);
+        let mapUrl = window.location.href;
+        let toilet = `<img src="./assets/toilet.svg" style="width: 0.95rem; opacity: 0.5;"></img>`;
+        let restaurant = `<img src="./assets/restaurant.svg" style="width: 0.95rem; opacity: 0.5;"></img>`;
         switch (parent) {
-            case 0: if (html) html = 'sites/' + HTML_HK[title]; break;
-            case 1: if (html) html = 'sites/' + HTML_ZH[title]; break;
+            case 0: if (html) html = 'sites/' + HTML_HK[title]; mapUrl = GOOGLE_MAP_HK[title]; 
+                    toilet = TOILET_HK[title] ? toilet : '';
+                    restaurant = RESTAURANT_HK[title] ? restaurant : '';
+                    break;
+            case 1: if (html) html = 'sites/' + HTML_ZH[title]; mapUrl = GOOGLE_MAP_ZH[title]; 
+                    toilet = TOILET_ZH[title] ? toilet : '';
+                    restaurant = RESTAURANT_ZH[title] ? restaurant : '';
+                    break;
         }
         const coords = getCoords(title, parent);
         if (!coords) {
@@ -375,11 +390,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         itemDiv.className = 'location-item';
         itemDiv.id = `item-${title.replace(/\s+/g, '-')}`;
         itemDiv.innerHTML = `
-            <div class="item-header">${title}</div>
+            <div class="item-header">
+                ${title}
+                ${toilet}
+                ${restaurant}
+            </div>
             <div class="item-detail">
                 <p>${text}</p>
                 <a href="${html}" style="margin-right: 0.2rem;">瞭解更多</a>
-                <a href="${siteUrl}" style="margin-left: 0.2rem;">360°全景圖</a>
+                <a href="${siteUrl}" style="margin-left: 0.2rem; margin-right: 0.2rem;">360°全景圖</a>
+                <a href="${mapUrl}" style="margin-left: 0.2rem;" target="_blank">Google Map</a>
             </div>
         `;
 
@@ -459,7 +479,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </strong>
                     <ul>`;
             dayData.route.forEach((stop, index) => {
-                html += `<li>${stop}`;
+                html += `
+                    <li>${stop}
+                    <svg onclick="openLocationFromNav('${stop}')" style="cursor: pointer; opacity: 0.7;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                `;
                 if (index < dayData.route.length - 1) {
                     const transport = dayData.transportLabel[index];
                     const navUrl = dayData.transportation[index];
@@ -793,6 +820,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         highlightLocation(coords[0], coords[1]);
         map.panTo([coords[0], coords[1]], { animate: true });
     };
+    window.openLocationFromNav = openLocationFromNav;
 
     const setSurroundings = (surroundings) => {
         if (!navSurroundingsSection || !navSurroundingsEl) return;

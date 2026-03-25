@@ -266,6 +266,9 @@ body, html {
     font-size: 0.95rem;
     color: var(--text-main);
     transition: all 0.2s;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
 }
 
 @media (hover: hover) {
