@@ -10,19 +10,15 @@ import {
     STOP_LOCATIONS_HK,
     NORMAL_LOCATIONS_HK,
     DESCRIPTION_HK,
-    DETAILS_HK,
     ROUTES_HK,
     ROUTES_DESC_HK,
     ROUTES_LINKED_LISTS_HK,
-    HTML_HK,
     ROUTES_ZH,
     ROUTES_DESC_ZH,
     ROUTES_LINKED_LISTS_ZH,
     STOP_LOCATIONS_ZH,
     NORMAL_LOCATIONS_ZH,
     DESCRIPTION_ZH,
-    DETAILS_ZH,
-    HTML_ZH,
     GOOGLE_MAP_HK,
     GOOGLE_MAP_ZH,
     TOILET_ZH,
@@ -324,7 +320,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 6. 地点分类逻辑
     const locationsContainer = document.getElementById('locations');
     const routesContainer = document.getElementById('routes');
-    const categories = ['香港', '珠海'];
+    // const categories = ['香港-西貢', '珠海'];
+    const categories = ['香港-西貢'];
     
     // 初始化地点分类
     categories.forEach((name, index) => {
@@ -361,17 +358,17 @@ document.addEventListener('DOMContentLoaded', async () => {
      */
     window.registerLocation = registerLocation;
     function registerLocation(title, text, parent) {
-        let html = window.location.href;
+        let html = window.location.href.replace('map.html', `/site.html?site=${title}`);
         const siteUrl = window.location.href.replace('map.html', `/virtual-tour.html?site=${title}`);
         let mapUrl = window.location.href;
         let toilet = `<img src="./assets/toilet.svg" style="width: 0.95rem; opacity: 0.5;"></img>`;
         let restaurant = `<img src="./assets/restaurant.svg" style="width: 0.95rem; opacity: 0.5;"></img>`;
         switch (parent) {
-            case 0: if (html) html = 'sites/' + HTML_HK[title]; mapUrl = GOOGLE_MAP_HK[title]; 
+            case 0: mapUrl = GOOGLE_MAP_HK[title]; 
                     toilet = TOILET_HK[title] ? toilet : '';
                     restaurant = RESTAURANT_HK[title] ? restaurant : '';
                     break;
-            case 1: if (html) html = 'sites/' + HTML_ZH[title]; mapUrl = GOOGLE_MAP_ZH[title]; 
+            case 1: mapUrl = GOOGLE_MAP_ZH[title]; 
                     toilet = TOILET_ZH[title] ? toilet : '';
                     restaurant = RESTAURANT_ZH[title] ? restaurant : '';
                     break;

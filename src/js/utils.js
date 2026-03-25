@@ -52,26 +52,26 @@ export function getRandomItems(arr, n) {
     return result.length > 0 ? result : null;
 }
 
-export function formatToFourChars(num) {
-    if (!num || isNaN(num) || Number(num) === 0) {
+export function formatToNChars(num, n = 4) {
+    if (!num || isNaN(num) || Number(num) === 0 || n <= 0) {
         return null;
     }
-    let formatted = Number(num).toPrecision(4);
+    let formatted = Number(num).toPrecision(n);
     let result = parseFloat(formatted).toString();
     if (!result.includes('.')) {
-        if (result.length < 4) {
-            result += '.' + '0'.repeat(4 - result.length);
+        if (result.length < n) {
+            result += '.' + '0'.repeat(n - result.length);
         }
     } else {
-        while (result.replace('.', '').length < 4) {
+        while (result.replace('.', '').length < n) {
             result += '0';
         }
     }
-    const finalStr = result.length > 5 ? result.substring(0, 5) : result;
+    const maxLen = n + (result.includes('.') ? 1 : 0);
+    const finalStr = result.length > maxLen ? result.substring(0, maxLen) : result;
     if (parseFloat(finalStr) === 0) {
         return null;
     }
-
     return parseFloat(finalStr);
 }
 

@@ -1,4 +1,4 @@
-import { isLogined, recordPreviousPage, getCurrentUser } from './supabase.js';
+import { isLogined, recordPreviousPage, getCurrentUser, supabase } from './supabase.js';
 
 const getLS = (key) => {
     const raw = localStorage.getItem(key);
@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const userData = await getCurrentUser();
     const user = userData?.user;
+    console.log(user);
     const userName = user?.user_metadata?.name || user?.user_metadata?.full_name || '用戶';
 
     const parent = getLS('parent');
@@ -165,4 +166,43 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    const { data: latestContributions, error } = await supabase
+        .from('contributions')
+        .select('*')
+        .order('time', { ascending: false })
+        .limit(1);
+
+    if (!error) {
+        console.log(latestContributions);
+        await supabase.from('contributions')
+            .insert([
+                {
+                    "CO2e": parseFloat(totalCO2e) + latestContributions[0].CO2e,
+                    "distance": parseFloat(totalDistance) + latestContributions[0].distance,
+                    "HKD": parseFloat(totalHKD) + latestContributions[0].HKD,
+                    "visits": parseInt(totalVisits) + latestContributions[0].visits,
+                }
+            ]);
+    }
+
+    await supabase.from('routes')
+        .insert([
+            {
+                "name": routeName,
+                "uid": user.id,
+                "region": region,
+                "status": "done",
+                "keyword_1": keyword1,
+                "keyword_2": keyword2,
+                "CO2e": totalCO2e,
+                "distance": totalDistance,
+                "HKD": totalHKD,
+                "visits": totalVisits,
+                "conclusion1": conclusion1Text,
+                "conclusion2": conclusion2Text,
+                "conclusion3": conclusion3Text,
+                "conclusion4": conclusion4Text,
+            }
+        ]);
 });

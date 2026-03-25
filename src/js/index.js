@@ -1,6 +1,28 @@
 import { supabase, isLogined, recordPreviousPage } from './supabase.js';
+import { formatToNChars } from './utils.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const { data: latestContributions, error } = await supabase
+        .from('contributions')
+        .select('*')
+        .order('time', { ascending: false })
+        .limit(1);
+
+    const CO2eVal = document.getElementById('CO2e-val');
+    const distanceVal = document.getElementById('dictance-val');
+    const HKDVal = document.getElementById('HKD-val');
+    const visitsVal = document.getElementById('visits-val');
+
+    if (!error) {
+        console.log(latestContributions);
+        CO2eVal.textContent = formatToNChars(latestContributions[0].CO2e) + 'kg';
+        distanceVal.textContent = formatToNChars(latestContributions[0].distance) + 'km';
+        HKDVal.textContent = formatToNChars(latestContributions[0].HKD, 6) + 'HKD';
+        visitsVal.textContent = formatToNChars(latestContributions[0].visits) + '次';
+    } else {
+        console.log(error);
+    }
+
     const startTourBtn = document.getElementById('start-tour-btn');
     const exploreBtn = document.getElementById('explore-btn');
     const navBtn = document.getElementById('navBtn');

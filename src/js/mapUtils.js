@@ -1,5 +1,5 @@
 import { LinkedList } from './utils.js';
-import { formatToFourChars } from './utils.js';
+import { formatToNChars } from './utils.js';
 
 let currentMap = null;
 let locationLayer = null;
@@ -18,9 +18,9 @@ export const STOP_LOCATIONS_HK = {
 };
 
 export const ROUTES_DESC_HK = {
-    '均衡綫路': '均衡了徒步與賞景，適合大部分人。',
-    '休閑綫路': '以賞景爲主，較爲輕鬆，適合帶有老人小孩的家庭出行，也適合度假放鬆。',
-    '硬核綫路': '包含高强度徒步鍛煉，也能欣賞沿途風景，適合登山愛好者或探險家。'
+    '均衡綫路': '均衡了徒步與賞景，適合大部分人。該路綫結合徒步與公共交通的低碳出行方式，推崇無痕山林原則，避免打擾當地居民生活，在自然與腳步間取得完美平衡。',
+    '休閑綫路': '以賞景爲主，較爲輕鬆，適合帶有老人小孩的家庭出行，也適合度假放鬆。行程搭乘公共交通前往，在休閑中探訪文化與自然遺跡並支持本地經濟，用低碳足跡守護郊野靜謐。',
+    '硬核綫路': '包含高强度徒步鍛煉，也能欣賞沿途風景和探尋文化與自然遺跡，適合登山愛好者或探險家。挑戰自我之餘，請自備水樽減少塑膠廢物，共同守護原始生態。'
 }
 
 export const ROUTES_HK = {
@@ -250,6 +250,29 @@ export const DETAILS_HK = {
     '赤徑': ''
 }
 
+export const IMGS_HK = {
+    '彩虹站': [],
+    '西貢': [],
+    '北潭凹': [],
+    '北潭涌': [],
+    '西灣亭': [],
+    '萬宜水庫東壩': [],
+    'WM Hotel': [],
+    '西貢碼頭': [],
+    '萬宜遊樂場': [],
+    'Lobster Une': [],
+    '海鮮街': [],
+    '天后古廟': [],
+    '火山探知館': [],
+    '破邊洲': [],
+    '浪茄灣': [],
+    '西灣山': [],
+    '聯合國教科文組織世界地質公園': [],
+    '西灣村': [],
+    '咸田灣': [],
+    '赤徑': [],
+}
+
 export const TOILET_HK = {
     '彩虹站': true,
     '西貢': true,
@@ -342,29 +365,6 @@ export const VIRTUAL_TOUR_HK = {
     '赤徑': 'https://app.cloudpano.com/tours/LfdIOTJSE?sceneId=k3Ep1dVyI'
 }
 
-export const HTML_HK = {
-    '彩虹站': 'ChoiHungStation.html',
-    '西貢': 'SaiKung.html',
-    '北潭凹': 'PakTamAu.html',
-    '北潭涌': 'PakTamChung.html',
-    '西灣亭': 'SaiWanPavilion.html',
-    '萬宜水庫東壩': 'HighIslandEastDam.html',
-    'WM Hotel': 'WMHotel.html',
-    '西貢碼頭': 'SaiKungPier.html',
-    '萬宜遊樂場': 'ManYeePlayground.html',
-    'Lobster Une': 'LobsterUne.html',
-    '海鮮街': 'SeafoodStreet.html',
-    '天后古廟': 'TinHauTemple.html',
-    '火山探知館': 'VolcanoDiscoveryCentre.html',
-    '破邊洲': 'PoPinChau.html',
-    '浪茄灣': 'LongKeWan.html',
-    '西灣山': 'SaiWanShan.html',
-    '聯合國教科文組織世界地質公園': 'Geopark.html',
-    '西灣村': 'SaiWanVillage.html',
-    '咸田灣': 'HamTinWan.html',
-    '赤徑': 'ChekKeng.html'
-};
-
 // 珠海
 
 export const STOP_LOCATIONS_ZH = {};
@@ -374,8 +374,6 @@ export const NORMAL_LOCATIONS_ZH = {};
 export const DESCRIPTION_ZH = {};
 
 export const DETAILS_ZH = {};
-
-export const HTML_ZH = {};
 
 export const ROUTES_ZH = {};
 
@@ -388,6 +386,8 @@ export const GOOGLE_MAP_ZH = {};
 export const TOILET_ZH = {};
 
 export const RESTAURANT_ZH = {};
+
+export const IMGS_ZH = {};
 
 // Route info end here
 
@@ -671,9 +671,9 @@ function generateRoutesLinkedLists(routes) {
                     location: info.route[i],
                     nextLocation: info.route[i + 1] || null,
                     day: dayIndex + 1,
-                    CO2e: formatToFourChars(info.CO2e[i] || null),
-                    distance: formatToFourChars(info.distance[i] || null),
-                    visits: formatToFourChars(info.visits[i] || null),
+                    CO2e: formatToNChars(info.CO2e[i] || null),
+                    distance: formatToNChars(info.distance[i] || null),
+                    visits: formatToNChars(info.visits[i] || null),
                     surroundings: info.surroundings[i * 2] || null
                 });
                 totalCO2e += info.CO2e[i] || 0;
@@ -696,11 +696,11 @@ function generateRoutesLinkedLists(routes) {
                 linkedLists[routeName].add(key - 0.5, {
                     type: 'aDayDone',
                     day: dayIndex + 1,
-                    HKD: formatToFourChars(HKD || null),
-                    totalCO2e: formatToFourChars(totalCO2e || null),
-                    totalDistance: formatToFourChars(totalDistance || null),
-                    totalHKD: formatToFourChars(totalHKD || null),
-                    totalVisits: formatToFourChars(totalVisits || null),
+                    HKD: formatToNChars(HKD || null),
+                    totalCO2e: formatToNChars(totalCO2e || null),
+                    totalDistance: formatToNChars(totalDistance || null),
+                    totalHKD: formatToNChars(totalHKD || null),
+                    totalVisits: formatToNChars(totalVisits || null),
                     accommodation: info.accommodation || null,
                     surroundings: null
                 });
@@ -708,10 +708,10 @@ function generateRoutesLinkedLists(routes) {
                 linkedLists[routeName].add(key - 0.5, {
                     type: 'allDone',
                     day: dayIndex + 1,
-                    totalCO2e: formatToFourChars(totalCO2e || null),
-                    totalDistance: formatToFourChars(totalDistance || null),
-                    totalHKD: formatToFourChars(totalHKD || null),
-                    totalVisits: formatToFourChars(totalVisits || null),
+                    totalCO2e: formatToNChars(totalCO2e || null),
+                    totalDistance: formatToNChars(totalDistance || null),
+                    totalHKD: formatToNChars(totalHKD || null),
+                    totalVisits: formatToNChars(totalVisits || null),
                     surroundings: null
                 });
             }
