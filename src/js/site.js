@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         navBtn.textContent = '我的賬戶';
         navBtn.href = 'account.html';
     } else {
+        recordPreviousPage(`site.html?site=${site}`);
         window.location.href = 'login.html';
-        recordPreviousPage('site.html');
     }
 
     const prevBtn = prevBtnEl();

@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      */
     window.registerLocation = registerLocation;
     function registerLocation(title, text, parent) {
-        let html = window.location.href.replace('map.html', `/site.html?site=${title}`);
+        let html = window.location.href.replace('map.html', `site.html?site=${title}`);
         const siteUrl = window.location.href.replace('map.html', `/virtual-tour.html?site=${title}`);
         let mapUrl = window.location.href;
         let toilet = `<img src="./assets/toilet.svg" style="width: 0.95rem; opacity: 0.5;"></img>`;
