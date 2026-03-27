@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!error) {
         console.log(latestContributions);
         CO2eVal.textContent = formatToNChars(latestContributions[0].CO2e) + 'kg';
-        distanceVal.textContent = formatToNChars(latestContributions[0].distance) + 'km';
+        distanceVal.textContent = formatToNChars(latestContributions[0].distance, 6) + 'km';
         HKDVal.textContent = formatToNChars(latestContributions[0].HKD, 6) + 'HKD';
         visitsVal.textContent = formatToNChars(latestContributions[0].visits) + '次';
     } else {
