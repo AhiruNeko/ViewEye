@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const specialIcons = document.getElementById('special-icons');
     const toilet = (TOILET_HK[site] || TOILET_ZH[site]) ? `<img src="./assets/toilet.svg" style="width: 0.95rem; opacity: 0.5;"></img>` : '';
     const restaurant = (RESTAURANT_HK[site] || RESTAURANT_ZH) ? `<img src="./assets/restaurant.svg" style="width: 0.95rem; opacity: 0.5;"></img>` : '';
-    const siteUrl = window.location.href.replace('site.html', `/virtual-tour.html?site=${site}`);
+    const siteUrl = window.location.href.replace('site.html', 'virtual-tour.html');
     const mapUrl = GOOGLE_MAP_HK[site] || GOOGLE_MAP_ZH[site];
     specialIcons.innerHTML = `
         ${toilet}
