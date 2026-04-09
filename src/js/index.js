@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const startTourBtn = document.getElementById('start-tour-btn');
     const exploreBtn = document.getElementById('explore-btn');
     const navBtn = document.getElementById('navBtn');
+    const menuWrap = document.getElementById('menuWrap');
+    const menuBtn = document.getElementById('menuBtn');
     let isProcessing = false;
 
     const IS_LOGINED = await isLogined();
@@ -142,5 +144,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     exploreBtn.addEventListener('pointerdown', (e) => {
         e.preventDefault();
+    });
+
+    const isHoverDevice = () => window.matchMedia && window.matchMedia('(hover: hover)').matches;
+    const closeMenu = () => {
+        if (!menuWrap || !menuBtn) return;
+        menuWrap.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+    };
+    const toggleMenu = () => {
+        if (!menuWrap || !menuBtn) return;
+        const next = !menuWrap.classList.contains('open');
+        menuWrap.classList.toggle('open', next);
+        menuBtn.setAttribute('aria-expanded', next ? 'true' : 'false');
+    };
+    if (menuBtn) {
+        menuBtn.addEventListener('pointerup', (e) => {
+            if (isHoverDevice()) return;
+            e.preventDefault();
+            toggleMenu();
+        });
+        menuBtn.addEventListener('pointerdown', (e) => e.preventDefault());
+    }
+    document.addEventListener('pointerdown', (e) => {
+        if (isHoverDevice()) return;
+        if (!menuWrap) return;
+        if (!menuWrap.classList.contains('open')) return;
+        if (menuWrap.contains(e.target)) return;
+        closeMenu();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
     });
 });

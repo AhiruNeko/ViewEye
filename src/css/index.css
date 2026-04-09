@@ -53,6 +53,100 @@ body {
     align-items: center;
 }
 
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.menu-wrap::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 10px;
+    display: none;
+}
+
+.menu-btn {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+@media (hover: hover) {
+    .menu-btn:hover {
+        transform: rotate(180deg);
+    }
+}
+
+.menu-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    padding: 8px;
+    border-radius: 14px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    display: none;
+    z-index: 1100;
+    margin-top: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.menu-item {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 800;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+}
+
+@media (hover: hover) {
+    .menu-item:hover {
+        transform: scale(1.2);
+        background-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 14px;    
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    }
+}
+
+@media (hover: hover) {
+    .menu-wrap:hover .menu-panel {
+        display: block;
+    }
+}
+
+@media (hover: hover) {
+    .menu-wrap:hover::after {
+        display: block;
+    }
+}
+
+.menu-wrap.open .menu-panel {
+    display: block;
+}
+
 .nav-logo {
     font-size: 1.5rem;
     font-weight: 800;
@@ -276,6 +370,8 @@ body {
     .nav-container { padding: 0 1rem; }
     .nav-logo { font-size: 1.25rem; }
     .login-btn { padding: 0.4rem 1rem; font-size: 0.8125rem; }
+    .menu-btn { width: 38px; height: 38px; }
+    .menu-panel { min-width: 170px; }
     .main-title { font-size: 2.5rem; }
     .subtitle { font-size: 1rem; }
     .title { font-size: 1.5rem; }
