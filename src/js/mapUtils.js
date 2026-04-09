@@ -36,7 +36,7 @@ export const ROUTES_HK = {
                 'https://maps.app.goo.gl/9kzgM4yXnoUsFe9C7'
             ],
             CO2e: [null, 2.813, 1.363, 1.190, 0.87, 1.131],
-            HKD: () => getRandomNormal(250, 450),
+            HKD: () => getRandomNormal(150, 300),
             distance: [null, 19.4, 9.4, 7.0, 6.0, 7.8],
             visits: [null, null, 1, null, null, 2],
             surroundings: [
@@ -59,7 +59,7 @@ export const ROUTES_HK = {
             transportLabel: ['小巴'],
             transportation: ['https://maps.app.goo.gl/MDS8v94vEg8Qozdd9'],
             CO2e: [null, 1.697],
-            HKD: () => getRandomNormal(250, 450),
+            HKD: () => getRandomNormal(150, 300),
             distance: [null, 11.7],
             visits: [2, null],
             surroundings: [
@@ -80,7 +80,7 @@ export const ROUTES_HK = {
                 'https://maps.app.goo.gl/4iP25Rn3CihGF9yC6'
             ],
             CO2e: [null, 2.813, 1.363, 2.48],
-            HKD: () => getRandomNormal(250, 450),
+            HKD: () => getRandomNormal(150, 300),
             distance: [null, 19.4, 9.4, 17.1],
             visits: [null, null, 1, 2],
             surroundings: [
@@ -104,7 +104,7 @@ export const ROUTES_HK = {
                 'https://maps.app.goo.gl/xyX1dz2ThHZT6jYy6'
             ],
             CO2e: [null, 1.131, 0.87, 0.87, 2.813],
-            HKD: () => getRandomNormal(250, 450),
+            HKD: () => getRandomNormal(150, 300),
             distance: [null, 7.8, 6.0, 6.0, 19.4],
             visits: [2, null, null, null, null],
             surroundings: [
@@ -133,7 +133,7 @@ export const ROUTES_HK = {
                 'https://maps.app.goo.gl/9kzgM4yXnoUsFe9C7'
             ],
             CO2e: [null, 2.813, 1.363, 1.190, 0.87, 1.131],
-            HKD: () => getRandomNormal(250, 450),
+            HKD: () => getRandomNormal(150, 300),
             distance: [null, 19.4, 9.4, 7.0, 6.0, 7.8],
             visits: [null, null, 1, null, null, 2],
             surroundings: [
@@ -162,7 +162,7 @@ export const ROUTES_HK = {
                 'https://maps.app.goo.gl/xyX1dz2ThHZT6jYy6'
             ],
             CO2e: [null, 1.131, 0.479, 1.173, 0.87, 2.813],
-            HKD: () => getRandomNormal(250, 450),
+            HKD: () => getRandomNormal(150, 300),
             distance: [null, 7.8, 3.3, 6.9, 6.0, 19.4],
             visits: [2, null, null, 1, null, null],
             surroundings: [
@@ -183,7 +183,7 @@ export const ROUTES_HK = {
     }
 }
 
-export const ROUTES_LINKED_LISTS_HK = generateRoutesLinkedLists(ROUTES_HK);
+export const ROUTES_LINKED_LISTS_HK = () => { return generateRoutesLinkedLists(ROUTES_HK); };
 
 export const NORMAL_LOCATIONS_HK = {
     'WM Hotel': [22.38552932793403, 114.27554214056737],
@@ -330,19 +330,19 @@ export const DETAILS_HK = {
 };
 
 export const IMGS_HK = {
-    '彩虹站': [],
+    '彩虹站': ['./assets/HK_IMGS/彩虹站1.jpg', './assets/HK_IMGS/彩虹站2.jpg', './assets/HK_IMGS/彩虹站3.jpg'],
     '西貢': [],
     '北潭凹': [],
     '北潭涌': [],
     '西灣亭': [],
     '萬宜水庫東壩': [],
-    'WM Hotel': [],
-    '西貢碼頭': [],
-    '萬宜遊樂場': [],
-    'Lobster Une': [],
-    '海鮮街': [],
+    'WM Hotel': ['./assets/HK_IMGS/WM Hotel.jpg'],
+    '西貢碼頭': ['./assets/HK_IMGS/西貢碼頭1.jpg', './assets/HK_IMGS/西貢碼頭2.jpg', './assets/HK_IMGS/西貢碼頭3.jpg', './assets/HK_IMGS/西貢碼頭4.jpg', './assets/HK_IMGS/西貢碼頭5.jpg', './assets/HK_IMGS/西貢碼頭6.jpg'],
+    '萬宜遊樂場': ['./assets/HK_IMGS/萬宜遊樂場.jpg'],
+    'Lobster Une': ['./assets/HK_IMGS/Lobster Une.jpg'],
+    '海鮮街': ['./assets/HK_IMGS/海鮮街1.jpg', './assets/HK_IMGS/海鮮街2.jpg', ],
     '天后古廟': [],
-    '火山探知館': [],
+    '火山探知館': ['./assets/HK_IMGS/火山探知館1.jpg', './assets/HK_IMGS/火山探知館2.jpg'],
     '破邊洲': [],
     '浪茄灣': [],
     '西灣山': [],
@@ -456,7 +456,7 @@ export const DETAILS_ZH = {};
 
 export const ROUTES_ZH = {};
 
-export const ROUTES_LINKED_LISTS_ZH = generateRoutesLinkedLists(ROUTES_ZH);
+export const ROUTES_LINKED_LISTS_ZH = () => { return generateRoutesLinkedLists(ROUTES_ZH); };
 
 export const ROUTES_DESC_ZH = {};
 

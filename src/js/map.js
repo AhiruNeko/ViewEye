@@ -445,6 +445,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     window.registerRoutes = registerRoutes;
+    let routeLinkedList;
     function registerRoutes(routeName, parent) {
         const routesData = parent === 0 ? ROUTES_HK : ROUTES_ZH;
         const routeInfo = routesData[routeName];
@@ -518,11 +519,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.setItem('routeName', routeName);
             localStorage.setItem('parent', parent);
             startNav(routeName, parent);
-            let routeLinkedList;
             switch (parent) {
-                case 0: routeLinkedList = ROUTES_LINKED_LISTS_HK[routeName]; break;
-                case 1: routeLinkedList = ROUTES_LINKED_LISTS_ZH[routeName]; break;
-            }           
+                case 0: routeLinkedList = ROUTES_LINKED_LISTS_HK()[routeName]; break;
+                case 1: routeLinkedList = ROUTES_LINKED_LISTS_ZH()[routeName]; break;
+            }   
             routeLinkedList.current = routeLinkedList.head;
             const info = routeLinkedList.current.value;
             setNavAtLocation(info.location, info.nextLocation, info.CO2e, info.distance, info.visits, info.surroundings);
@@ -708,11 +708,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const routeName = localStorage.getItem('routeName');
         const parent = localStorage.getItem('parent');
         if (!routeName || !parent) return;
-        let routeLinkedList;
-        switch (parent) {
-            case '0': routeLinkedList = ROUTES_LINKED_LISTS_HK[routeName]; break;
-            case '1': routeLinkedList = ROUTES_LINKED_LISTS_ZH[routeName]; break;
-        }
         if (!routeLinkedList) return;
         const node = routeLinkedList.goForward();
         if (!node) return;
@@ -729,11 +724,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const routeName = localStorage.getItem('routeName');
         const parent = localStorage.getItem('parent');
         if (!routeName || !parent) return;
-        let routeLinkedList;
-        switch (parent) {
-            case '0': routeLinkedList = ROUTES_LINKED_LISTS_HK[routeName]; break;
-            case '1': routeLinkedList = ROUTES_LINKED_LISTS_ZH[routeName]; break;
-        }
         if (!routeLinkedList) return;
         const node = routeLinkedList.goBack();
         if (!node) return;
