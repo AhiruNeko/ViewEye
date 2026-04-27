@@ -71,8 +71,9 @@ body {
     left: 0;
     right: 0;
     top: 100%;
-    height: 10px;
-    display: none;
+    height: 50px;
+    width: 500px;
+    display: block;
 }
 
 .menu-btn {

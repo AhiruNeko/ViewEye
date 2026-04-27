@@ -28,7 +28,7 @@ import {
 } from './mapUtils.js';
 
 import { getAIResponse, RECOMMENDED_PROMPTS } from './ai.js';
-import { SUSTAINABLE_TITLES, getRandomItems, SUSTAINABLE_CONCLUSION_HK, SUSTAINABLE_CONCLUSION_ZH, SITES_CONCLUSION_HK, SITES_CONCLUSION_ZH } from './utils.js';
+import { SUSTAINABLE_TITLES_HK, SUSTAINABLE_TITLES_ZH, getRandomItems, SUSTAINABLE_CONCLUSION_HK, SUSTAINABLE_CONCLUSION_ZH, SITES_CONCLUSION_HK, SITES_CONCLUSION_ZH } from './utils.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // console.log(ROUTES_LINKED_LISTS_HK);
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. 初始化地图 西贡
     const map = L.map('map', {
         zoomControl: false
-    }).setView([22.382183545063885, 114.27381914090027], 15);
+    }).setView([22.24881600233193, 113.77315051097969], 10.4);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -320,8 +320,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 6. 地点分类逻辑
     const locationsContainer = document.getElementById('locations');
     const routesContainer = document.getElementById('routes');
-    // const categories = ['香港-西貢', '珠海'];
-    const categories = ['香港-西貢'];
+    const categories = ['香港-西貢', '珠海'];
+    // const categories = ['香港-西貢'];
     
     // 初始化地点分类
     categories.forEach((name, index) => {
@@ -632,6 +632,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     Object.keys(STOP_LOCATIONS_HK).forEach(key => registerLocation(key, DESCRIPTION_HK[key], 0));
     Object.keys(NORMAL_LOCATIONS_HK).forEach(key => registerLocation(key, DESCRIPTION_HK[key], 0));
     Object.keys(ROUTES_HK).forEach(key => registerRoutes(key, 0));
+    Object.keys(STOP_LOCATIONS_ZH).forEach(key => registerLocation(key, DESCRIPTION_ZH[key], 1));
+    Object.keys(NORMAL_LOCATIONS_ZH).forEach(key => registerLocation(key, DESCRIPTION_ZH[key], 1));
+    Object.keys(ROUTES_ZH).forEach(key => registerRoutes(key, 1));
 
     const observerOptions = {
         root: document.querySelector('.hero-container'),
@@ -971,11 +974,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('totalDistance', totalDistance);
         localStorage.setItem('totalHKD', totalHKD);
         localStorage.setItem('totalVisits', totalVisits);
+        let SUSTAINABLE_TITLES;
+        const parent = localStorage.getItem('parent');
+        switch (parent) {
+            case '0': SUSTAINABLE_TITLES = SUSTAINABLE_TITLES_HK; break;
+            case '1': SUSTAINABLE_TITLES = SUSTAINABLE_TITLES_ZH; break;
+        }
         const keywords = getRandomItems(SUSTAINABLE_TITLES, 2);
         localStorage.setItem('keyword1', keywords[0]);
         localStorage.setItem('keyword2', keywords[1]);
         let SUSTAINABLE_CONCLUSION, SITES_CONCLUSION;
-        const parent = localStorage.getItem('parent');
         switch (parent) {
             case '0': SUSTAINABLE_CONCLUSION = SUSTAINABLE_CONCLUSION_HK; SITES_CONCLUSION = SITES_CONCLUSION_HK; break;
             case '1': SUSTAINABLE_CONCLUSION = SUSTAINABLE_CONCLUSION_ZH; SITES_CONCLUSION = SITES_CONCLUSION_ZH; break;

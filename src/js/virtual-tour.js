@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('currentScene', currentScene);
     if (currentScene && VIRTUAL_TOUR_HK[currentScene]) {
         panoPlayer.src = VIRTUAL_TOUR_HK[currentScene];
+    } else {
+        alert("該景點暫無360全景圖，已自動跳轉至香港西貢全景圖。")
     }
 
     const navBtn = document.getElementById('navBtn');
