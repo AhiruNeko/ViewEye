@@ -23,6 +23,12 @@ export const ROUTES_DESC_HK = {
     '硬核綫路': '包含高强度徒步鍛煉，也能欣賞沿途風景和探尋文化與自然遺跡，適合登山愛好者或探險家。挑戰自我之餘，請自備水樽減少塑膠廢物，共同守護原始生態。'
 }
 
+export const GUIDEBOOK_URL_HK = {
+    '均衡綫路': 'assets/guidebook_HK.pdf',
+    '休閑綫路': 'assets/guidebook_HK.pdf',
+    '硬核綫路': 'assets/guidebook_HK.pdf'
+}
+
 export const ROUTES_HK = {
     '均衡綫路': {
         day1: {
@@ -577,6 +583,10 @@ export const ROUTES_LINKED_LISTS_ZH = () => {
 export const ROUTES_DESC_ZH = {
     '科文智旅': '從歷史到科技，從個人健康到國家科技發展的可持續，這趟旅程融合了文脈與智造前沿，以低碳之姿解讀珠海的獨特脈動。旅程采用公交的低碳出行方式，適合想學習科技文化的家庭出行。全程公交時間較長，可適當乘坐的士出行。'
 };
+
+export const GUIDEBOOK_URL_ZH = {
+    '科文智旅': 'assets/guidebook_ZH.pdf'
+}
 
 export const GOOGLE_MAP_ZH = {
     '珠海入境處': 'https://maps.app.goo.gl/jcvQeeYavAoMHQKf6',

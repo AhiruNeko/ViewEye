@@ -25,6 +25,8 @@ import {
     RESTAURANT_ZH,
     TOILET_HK,
     RESTAURANT_HK,
+    GUIDEBOOK_URL_HK,
+    GUIDEBOOK_URL_ZH
 } from './mapUtils.js';
 
 import { getAIResponse, RECOMMENDED_PROMPTS } from './ai.js';
@@ -504,12 +506,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         const routeDesc = parent === 0 ? ROUTES_DESC_HK[routeName] : ROUTES_DESC_ZH[routeName];
+        const guidebookUrl = parent === 0 ? GUIDEBOOK_URL_HK[routeName] : GUIDEBOOK_URL_ZH[routeName];
 
         itemDiv.innerHTML = `
             <div class="item-header">${routeName}</div>
             <div class="item-detail">
                 ${routeDesc ? `<p>${routeDesc}</p>` : ''}
                 <button type="button" class="start-btn">开始旅程</button>
+                <button type="button" class="guidebook-btn">查看旅行指南冊</button>
                 ${generateDayHtml(1, routeInfo.day1)}
                 ${generateDayHtml(2, routeInfo.day2)}
             </div>
@@ -526,6 +530,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             routeLinkedList.current = routeLinkedList.head;
             const info = routeLinkedList.current.value;
             setNavAtLocation(info.location, info.nextLocation, info.CO2e, info.distance, info.visits, info.surroundings);
+        });
+
+        itemDiv.querySelector('.guidebook-btn').addEventListener('click', () => {
+            window.open(guidebookUrl, '_blank');
         });
 
         // 辅助函数：绘制特定一天的路线（直接使用虚线直线连接）

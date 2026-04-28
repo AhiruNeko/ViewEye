@@ -69,13 +69,28 @@ body, html {
 
 .start-btn {
     padding: 0.5rem 1.25rem;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background-color 0.2s ease, border 0.2s ease;
+    border: 3px solid var(--primary-color);
+    margin-top: 0.5rem;
+    width: 100%;
+    cursor: pointer;
+}
+
+.guidebook-btn {
+    padding: 0.5rem 1.25rem;
     background-color: transparent;
     color: var(--primary-color);
     text-decoration: none;
     border-radius: 0.5rem;
     font-weight: 600;
     font-size: 0.875rem;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, border 0.2s ease;
     border: 3px solid var(--primary-color);
     margin-top: 0.5rem;
     width: 100%;
@@ -130,8 +145,13 @@ body, html {
 
 @media (hover: hover) {
     .start-btn:hover {
-        background-color: var(--primary-color);
-        color: white;
+        background-color: var(--text-main);
+        border: 3px solid var(--text-main);
+    }
+
+    .guidebook-btn:hover {
+        border: 3px solid var(--text-main);
+        color: var(--text-main);
     }
 
     .ctrl-btn:hover {
