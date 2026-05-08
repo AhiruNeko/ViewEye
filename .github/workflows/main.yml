@@ -1,13 +1,17 @@
-name: Wake up Website
-
+name: Visit Website Home
 on:
   schedule:
     - cron: '0 0 */5 * *'
-  workflow_dispatch:
 
 jobs:
-  ping:
+  render_page:
     runs-on: ubuntu-latest
     steps:
-      - name: Visit Homepage
-        run: curl -sL https://vieweye.vercel.app/ > /dev/null
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+      - name: Install Playwright
+        run: npx playwright install-deps && npx playwright install chromium
+      - name: Run Ping
+        run: npx playwright wkld https://vieweye.vercel.app
