@@ -14,5 +14,5 @@ jobs:
         uses: actions/setup-node@v4
       - name: Install Playwright
         run: npx playwright install-deps && npx playwright install chromium
-      - name: Run Ping
-        run: npx playwright wkld https://vieweye.vercel.app
+      - name: Run Ping (Screenshot)
+        run: npx playwright screenshot https://vieweye.vercel.app screenshot.png
