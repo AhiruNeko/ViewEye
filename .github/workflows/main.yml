@@ -2,6 +2,7 @@ name: Visit Website Home
 on:
   schedule:
     - cron: '0 0 */5 * *'
+  workflow_dispatch:
 
 jobs:
   render_page:
