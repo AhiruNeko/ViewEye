@@ -1,0 +1,13 @@
+name: Wake up Website
+
+on:
+  schedule:
+    - cron: '0 0 */5 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Visit Homepage
+        run: curl -sL https://vieweye.vercel.app/ > /dev/null
